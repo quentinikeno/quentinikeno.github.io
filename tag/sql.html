@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <title>Quentin Ikeno - SQL</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Quentin Ikeno </a></h1>
+                <nav><ul>
+                    <li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/wrangle-openstreetmap-data.html">Wrangle OpenStreetMap Data</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-02-18T00:00:00-10:00">
+                Published: Sun 18 February 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
+        </address>
+<p>In <a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a>.</p>
+<p>tags: <a href="/tag/python.html">Python</a> <a href="/tag/sql.html">SQL</a> <a href="/tag/data-cleaning.html">Data Cleaning</a> <a href="/tag/data-analysis.html">Data Analysis</a> <a href="/tag/udacity.html">Udacity</a> </p>
+</footer><!-- /.post-info --><h1>Project: Wrangle OpenStreetMap Data</h1>
+<hr>
+<h2>Introduction</h2>
+<p>OpenStreetMap is a community driven project with the goal of providing open-source geographic data for the entire Earth.  The purpose of this project will be to take OpenStreetMap data, clean it using data munging techniques, and run SQL queries once the data has been cleaned. </p>
+<p>The data I decided to use is from the map of the Island of Hawai’i (also known as the Big Island), in the State of Hawaii, United States of America.  I grew up on the Big Island, so it is an area I am familiar with, which should make checking for errors in the data easier.</p>
+<p><img alt="map of the big island" src="images/map.png"></p>
+<h2>Problems Encountered in the Map</h2>
+<p>After auditing a sample of the data using Python, several problems were encountered.  Of these, I decided to focus on cleaning the street name, zip code, and telephone number data:</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+
+<span class="n">OSM_FILE</span> <span class="o">=</span> <span class="s2">&quot;County_of_Hawaii.osm&quot;</span>  <span class="c1"># Names for osm files</span>
+<span class="n">SAMPLE_FILE</span> <span class="o">=</span> <span class="s2">&quot;sample.osm&quot;</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Parameter: take every k-th top level element</span>
+
+<span class="c1">#Taking a sample of data from the osm file to work with</span>
+
+<span class="k">def</span> <span class="nf">get_element</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;way&#39;</span><span class="p">,</span> <span class="s1">&#39;relation&#39;</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Yield element if it is the right type of tag</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">    http://stackoverflow.com/questions/3095434/inserting-newlines-in-xml-file-generated-via-xml-etree-elementtree-in-python</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">root</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span> <span class="ow">and</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">elem</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">SAMPLE_FILE</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;osm&gt;</span><span class="se">\n</span><span class="s1">  &#39;</span><span class="p">)</span>
+
+    <span class="c1"># Write every kth top level element</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">get_element</span><span class="p">(</span><span class="n">OSM_FILE</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;/osm&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Street Names</h3>
+<p>The first issue involving the street names was that they did not adhere to a standard format:</p>
+<ul>
+<li>Some street names used abbreviations in their names while others do not (e.g. Milo St. vs. Lako Street or Puni Lapa Loop N. vs. Puni Mauka Loop North)</li>
+<li>Some names contain words in all lowercase (e.g. Kapoi street)</li>
+</ul>
+<p>Secondly, way elements for street data have tags containing the street name where the key is “name” instead of “addr:street.” </p>
+<p>To clean the street names data, I modified the “update_name” function from the Udacity Case Study Lesson.  After making changes, the function will:  Unabbreviate all abbreviated words, change words written in all lowercase to have the first letter capitalized, and update the tag key to be “street.”</p>
+<h3>Zip Codes</h3>
+<p>I found that there were no problems with how the zip codes were formatted, however, three zip codes were erroneous.  One of the zip codes was is a zip code used on the island of Moloka’i, the other is a zip code that is an Alaskan zip code, and the last was given as “HI.” </p>
+<p>The after looking up the true zip codes for each of the three locations with inconsistent codes, I created the “update_zip” function to correct them.</p>
+<h3>Phone Numbers</h3>
+<p>There were 15 different formats for how phone numbers were formatted.  Here are some examples:
+-   (808) XXX – XXXX
+-   (808) – XXX – XXXX
+-   +1 808 XXX XXXX
+-   +1 808 XXX – XXXX
+-   +1 (808) XXXXXXX
+-   +1 – 808 – XXX – XXXX
+-   XXXXXXX
+The “update_phones” function converts all phone numbers to the format          <br>
+(808) – XXX – XXXX.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">from</span> <span class="nn">titlecase</span> <span class="kn">import</span> <span class="n">titlecase</span>
+
+<span class="n">OSMFILE</span> <span class="o">=</span> <span class="s2">&quot;County_of_Hawaii.osm&quot;</span>
+
+<span class="c1">#Modified code from the Case Study lesson</span>
+<span class="n">street_type_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\b\S+\.?$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+<span class="n">expected</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Street&quot;</span><span class="p">,</span> <span class="s2">&quot;Avenue&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulevard&quot;</span><span class="p">,</span> <span class="s2">&quot;Drive&quot;</span><span class="p">,</span> <span class="s2">&quot;Court&quot;</span><span class="p">,</span> <span class="s2">&quot;Place&quot;</span><span class="p">,</span> <span class="s2">&quot;Square&quot;</span><span class="p">,</span> <span class="s2">&quot;Lane&quot;</span><span class="p">,</span> <span class="s2">&quot;Road&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Trail&quot;</span><span class="p">,</span> <span class="s2">&quot;Parkway&quot;</span><span class="p">,</span> <span class="s2">&quot;Commons&quot;</span><span class="p">,</span> <span class="s2">&quot;Loop&quot;</span><span class="p">,</span> <span class="s2">&quot;Highway&quot;</span><span class="p">,</span> <span class="s2">&quot;Circle&quot;</span><span class="p">,</span> <span class="s2">&quot;South&quot;</span><span class="p">,</span> <span class="s2">&quot;Way&quot;</span><span class="p">]</span>
+
+<span class="c1">#Unexpected is a list of names that were not in the expected list above that need to be changed</span>
+<span class="n">unexpected</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Trl&quot;</span><span class="p">,</span> <span class="s2">&quot;Roadd&quot;</span><span class="p">,</span> <span class="s2">&quot;place&quot;</span><span class="p">,</span> <span class="s2">&quot;street&quot;</span><span class="p">,</span> <span class="s2">&quot;trail&quot;</span><span class="p">,</span> <span class="s1">&#39;Ave&#39;</span><span class="p">,</span> <span class="s1">&#39;Ave.&#39;</span><span class="p">,</span> <span class="s1">&#39;Rd&#39;</span><span class="p">,</span> <span class="s1">&#39;St&#39;</span><span class="p">,</span> <span class="s1">&#39;Traill&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">audit_street_type</span><span class="p">(</span><span class="n">street_types</span><span class="p">,</span> <span class="n">street_name</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">street_type_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">street_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+        <span class="n">street_type</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">street_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="n">street_types</span><span class="p">[</span><span class="n">street_type</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">street_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_street_name_way</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks if there is a tag with the k attribute &quot;name&quot; for a way tag&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span>
+
+<span class="k">def</span> <span class="nf">is_street_name_node</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks if there is a tag with the k attribute &quot;add:street&quot; for a node tag&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;addr:street&quot;</span>
+
+<span class="k">def</span> <span class="nf">audit</span><span class="p">(</span><span class="n">osmfile</span><span class="p">):</span>
+    <span class="n">osm_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">osmfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">street_types</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,)):</span>
+        <span class="k">if</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;way&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_street_name_way</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                    <span class="n">audit_street_type</span><span class="p">(</span><span class="n">street_types</span><span class="p">,</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_street_name_node</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                    <span class="n">audit_street_type</span><span class="p">(</span><span class="n">street_types</span><span class="p">,</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>
+    <span class="n">osm_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">street_types</span>
+
+<span class="k">def</span> <span class="nf">test_street</span><span class="p">():</span>
+    <span class="n">st_types</span> <span class="o">=</span> <span class="n">audit</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">st_types</span><span class="p">))</span>
+
+<span class="c1">#test_street()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">from</span> <span class="nn">titlecase</span> <span class="kn">import</span> <span class="n">titlecase</span>
+<span class="kn">import</span> <span class="nn">bs4</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlopen</span> <span class="k">as</span> <span class="n">ureq</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">OSMFILE</span> <span class="o">=</span> <span class="s2">&quot;County_of_Hawaii.osm&quot;</span>
+
+<span class="c1">#Scrape from a webpage a list of all the zip codes used in the County of Hawaii using Beautiful Soup</span>
+<span class="n">my_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.zipcodestogo.com/Hawaii/HI/&#39;</span>
+<span class="n">uclient</span> <span class="o">=</span> <span class="n">ureq</span><span class="p">(</span><span class="n">my_url</span><span class="p">)</span>
+<span class="n">html_page</span> <span class="o">=</span> <span class="n">uclient</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">uclient</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html_page</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+
+<span class="n">expected_zip_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">})</span>
+<span class="k">for</span> <span class="n">zip_code</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">:]:</span>   <span class="c1">#skip first three results in table since they contain table headings not zip codes</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">zip_code</span><span class="o">.</span><span class="n">td</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
+    <span class="n">expected_zip_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&gt;(.*?)&lt;&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>    <span class="c1">#use regex to extract the zipcode from the a tag and append it to the list</span>
+
+<span class="k">def</span> <span class="nf">audit_zip</span><span class="p">(</span><span class="n">zip_codes</span><span class="p">,</span> <span class="n">zip_code</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">zip_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected_zip_list</span><span class="p">:</span>
+        <span class="n">zip_codes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">zip_code</span><span class="p">)</span>          
+
+<span class="k">def</span> <span class="nf">is_zip_code</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;addr:postcode&quot;</span>
+
+<span class="k">def</span> <span class="nf">audit_zip_codes</span><span class="p">(</span><span class="n">osmfile</span><span class="p">):</span>
+    <span class="n">osm_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">osmfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">zip_codes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,)):</span>
+        <span class="k">if</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span> <span class="ow">or</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;way&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_zip_code</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                    <span class="n">audit_zip</span><span class="p">(</span><span class="n">zip_codes</span><span class="p">,</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>
+    <span class="n">osm_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">zip_codes</span>
+
+<span class="k">def</span> <span class="nf">test_zip</span><span class="p">():</span>
+    <span class="n">zips</span> <span class="o">=</span> <span class="n">audit_zip_codes</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">zips</span><span class="p">))</span>
+
+<span class="c1">#test_zip()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">OSMFILE</span> <span class="o">=</span> <span class="s2">&quot;County_of_Hawaii.osm&quot;</span>
+
+<span class="k">def</span> <span class="nf">audit_phone</span><span class="p">(</span><span class="n">phone_types</span><span class="p">,</span> <span class="n">phone_number</span><span class="p">):</span>
+    <span class="n">phone_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">phone_number</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">is_phone_number</span><span class="p">(</span><span class="n">elem</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">elem</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;phone&quot;</span> <span class="ow">or</span> <span class="s2">&quot;contact:phone&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">audit_phones</span><span class="p">(</span><span class="n">osmfile</span><span class="p">):</span>
+    <span class="n">osm_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">osmfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">phone_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,)):</span>
+        <span class="k">if</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;node&quot;</span> <span class="ow">or</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span><span class="s2">&quot;way&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">elem</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">is_phone_number</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+                    <span class="n">audit_phone</span><span class="p">(</span><span class="n">phone_types</span><span class="p">,</span> <span class="n">tag</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>
+    <span class="n">osm_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">phone_types</span>
+
+<span class="k">def</span> <span class="nf">test_phone</span><span class="p">():</span>
+    <span class="n">phones</span> <span class="o">=</span> <span class="n">audit_phones</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">phones</span><span class="p">))</span>
+
+<span class="c1">#test_phone()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">cerberus</span>
+<span class="kn">from</span> <span class="nn">schema</span> <span class="kn">import</span> <span class="n">Schema</span>
+
+<span class="n">OSM_PATH</span> <span class="o">=</span> <span class="s2">&quot;County_of_Hawaii.osm&quot;</span>
+
+<span class="k">def</span> <span class="nf">update_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Programtically update names for street names that must be fixed.&quot;&quot;&quot;</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Street&quot;</span><span class="p">,</span> <span class="s2">&quot;Avenue&quot;</span><span class="p">,</span> <span class="s2">&quot;Boulevard&quot;</span><span class="p">,</span> <span class="s2">&quot;Drive&quot;</span><span class="p">,</span> <span class="s2">&quot;Court&quot;</span><span class="p">,</span> <span class="s2">&quot;Place&quot;</span><span class="p">,</span> <span class="s2">&quot;Square&quot;</span><span class="p">,</span> <span class="s2">&quot;Lane&quot;</span><span class="p">,</span> <span class="s2">&quot;Road&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Trail&quot;</span><span class="p">,</span> <span class="s2">&quot;Parkway&quot;</span><span class="p">,</span> <span class="s2">&quot;Commons&quot;</span><span class="p">,</span> <span class="s2">&quot;Loop&quot;</span><span class="p">,</span> <span class="s2">&quot;Highway&quot;</span><span class="p">,</span> <span class="s2">&quot;Circle&quot;</span><span class="p">,</span> <span class="s2">&quot;North&quot;</span><span class="p">,</span> <span class="s2">&quot;South&quot;</span><span class="p">,</span> <span class="s2">&quot;East&quot;</span><span class="p">,</span> <span class="s2">&quot;West&quot;</span><span class="p">,</span> <span class="s2">&quot;Way&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="n">unexpected</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Trl&quot;</span><span class="p">,</span> <span class="s2">&quot;Roadd&quot;</span><span class="p">,</span><span class="s1">&#39;Ave&#39;</span><span class="p">,</span> <span class="s1">&#39;Ave.&#39;</span><span class="p">,</span> <span class="s1">&#39;Rd&#39;</span><span class="p">,</span> <span class="s1">&#39;St&#39;</span><span class="p">,</span> <span class="s1">&#39;Traill&#39;</span><span class="p">]</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;Trl&quot;</span><span class="p">:</span> <span class="s2">&quot;Trail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Roadd&quot;</span><span class="p">:</span> <span class="s2">&quot;Road&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;Ave&#39;</span><span class="p">:</span> <span class="s1">&#39;Avenue&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Ave.&#39;</span><span class="p">:</span> <span class="s1">&#39;Avenue&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Rd&#39;</span><span class="p">:</span> <span class="s1">&#39;Road&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;St&#39;</span><span class="p">:</span> <span class="s1">&#39;Street&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Traill&#39;</span><span class="p">:</span>  <span class="s1">&#39;Trail&#39;</span>
+            <span class="p">}</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="c1">#Use titlecase to make street names that are in lowercase have uppercase letters for the first letter in each word</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">titlecase</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="c1">#Correct street names with abbreviated cardinal directions to be unabbreviated</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>    <span class="c1">#Create a set of words in the street name</span>
+    <span class="k">if</span> <span class="n">words</span><span class="o">.</span><span class="n">intersection</span><span class="p">([</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">():</span>  <span class="c1">#Check if N, S, E, or W is in the street name </span>
+        <span class="k">if</span> <span class="n">words</span><span class="o">.</span><span class="n">intersection</span><span class="p">([</span><span class="s1">&#39;Building&#39;</span><span class="p">,</span> <span class="s1">&#39;Road&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">,</span> <span class="s1">&#39;330&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">set</span><span class="p">():</span>  <span class="c1">#Exclude way names such &quot;Building E&quot; or &quot;Road A&quot;</span>
+            <span class="k">if</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>    <span class="c1">#Replace the abbreviation with the appropriate unabbreviated direction</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;South&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+            <span class="k">elif</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;North&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+            <span class="k">elif</span> <span class="s1">&#39;E&#39;</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;East&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="s1">&#39;West&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+    <span class="c1">#Replace all other abbreviations with unabbreviated names such as Street for St.</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">street_type_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+        <span class="n">street_type</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">street_type</span> <span class="ow">in</span> <span class="n">unexpected</span><span class="p">:</span>
+            <span class="n">new_road_type</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">street_type</span><span class="p">]</span>
+            <span class="n">road_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">road_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">new_road_type</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+        <span class="k">elif</span> <span class="n">street_type</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">street_type</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1">#Check is the last word in the street name is just one letter</span>
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Rd&#39;</span><span class="p">):</span>  <span class="c1">#For example update Rd. A to Road A.  Do not update Building A to Road A.</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Road&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">street_type</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;street&#39;</span>
+
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span>    <span class="c1">#If name is a street name, change the key to &quot;street.&quot;  If name is not a street is not a street name the key input will be returned.</span>
+
+
+<span class="k">def</span> <span class="nf">test_street</span><span class="p">():</span>
+    <span class="n">st_types</span> <span class="o">=</span> <span class="n">audit</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="c1">#pprint.pprint(dict(st_types))</span>
+
+    <span class="k">for</span> <span class="n">st_type</span><span class="p">,</span> <span class="n">ways</span> <span class="ow">in</span> <span class="n">st_types</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ways</span><span class="p">:</span>
+            <span class="n">better_name</span> <span class="o">=</span> <span class="n">update_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">better_name</span>
+
+<span class="c1">#test_street()</span>
+
+<span class="k">def</span> <span class="nf">update_zip</span><span class="p">(</span><span class="n">zip_code</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update erroneous zip codes&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">zip_code</span> <span class="o">==</span> <span class="s1">&#39;96770&#39;</span><span class="p">:</span>    
+        <span class="k">return</span> <span class="s1">&#39;96785&#39;</span>    <span class="c1">#Fix the zip code for Mauna Loa Estates</span>
+    <span class="k">elif</span> <span class="n">zip_code</span> <span class="o">==</span> <span class="s1">&#39;HI&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;96740&#39;</span>    <span class="c1">#Fix zip code for Oahu Building</span>
+    <span class="k">elif</span> <span class="n">zip_code</span> <span class="o">==</span> <span class="s1">&#39;99723&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;96720&#39;</span>    <span class="c1">#Fix the zip code for Hilo Chevron</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">zip_code</span>
+
+<span class="k">def</span> <span class="nf">test_zip</span><span class="p">():</span>
+    <span class="n">zips</span> <span class="o">=</span> <span class="n">audit_zip_codes</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="c1">#pprint.pprint(dict(zips))</span>
+
+    <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">zips</span><span class="p">:</span>
+        <span class="n">better_zip</span> <span class="o">=</span> <span class="n">update_zip</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="k">print</span> <span class="n">code</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">better_zip</span>
+
+<span class="c1">#test_zip()</span>
+
+<span class="k">def</span> <span class="nf">update_phones</span><span class="p">(</span><span class="n">phone_number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Updates phone numbers to the form (area code)-XXX-XXXX&quot;&quot;&quot;</span>
+    <span class="n">just_numbers</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span> <span class="n">phone_number</span><span class="p">)</span>    <span class="c1">#Find only digits in the phone number ie ignore &quot;+&quot;, &quot;(&quot;, &quot;)&quot;, &quot; &quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">just_numbers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">just_numbers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">just_numbers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;(808)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;808&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;(808)&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">just_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">:]</span>
+
+<span class="k">def</span> <span class="nf">test_phone</span><span class="p">():</span>
+    <span class="n">phones</span> <span class="o">=</span> <span class="n">audit_phones</span><span class="p">(</span><span class="n">OSMFILE</span><span class="p">)</span>
+    <span class="c1">#pprint.pprint(set(phones))</span>
+
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">phones</span><span class="p">:</span>
+            <span class="n">better_number</span> <span class="o">=</span> <span class="n">update_phones</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">number</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">better_number</span>
+
+<span class="c1">#test_phone()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">NODES_PATH</span> <span class="o">=</span> <span class="s2">&quot;nodes.csv&quot;</span>
+<span class="n">NODE_TAGS_PATH</span> <span class="o">=</span> <span class="s2">&quot;nodes_tags.csv&quot;</span>
+<span class="n">WAYS_PATH</span> <span class="o">=</span> <span class="s2">&quot;ways.csv&quot;</span>
+<span class="n">WAY_NODES_PATH</span> <span class="o">=</span> <span class="s2">&quot;ways_nodes.csv&quot;</span>
+<span class="n">WAY_TAGS_PATH</span> <span class="o">=</span> <span class="s2">&quot;ways_tags.csv&quot;</span>
+
+<span class="n">LOWER_COLON</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^([a-z]|_)+:([a-z]|_)+&#39;</span><span class="p">)</span>
+<span class="n">PROBLEMCHARS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[=\+/&amp;&lt;&gt;;</span><span class="se">\&#39;</span><span class="s1">&quot;\?%#$@\,\. \t\r\n]&#39;</span><span class="p">)</span>
+
+<span class="n">SCHEMA</span> <span class="o">=</span> <span class="n">schema</span>
+
+<span class="c1"># Make sure the fields order in the csvs matches the column order in the sql table schema</span>
+<span class="n">NODE_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;uid&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;changeset&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+<span class="n">NODE_TAGS_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">]</span>
+<span class="n">WAY_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;uid&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;changeset&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+<span class="n">WAY_TAGS_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">]</span>
+<span class="n">WAY_NODES_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;node_id&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">shape_element</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">node_attr_fields</span><span class="o">=</span><span class="n">NODE_FIELDS</span><span class="p">,</span> <span class="n">way_attr_fields</span><span class="o">=</span><span class="n">WAY_FIELDS</span><span class="p">,</span>
+                  <span class="n">problem_chars</span><span class="o">=</span><span class="n">PROBLEMCHARS</span><span class="p">,</span> <span class="n">default_tag_type</span><span class="o">=</span><span class="s1">&#39;regular&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clean and shape node or way XML element to Python dict&quot;&quot;&quot;</span>
+
+    <span class="n">node_attribs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">way_attribs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">way_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Handle secondary tags the same way for both node and way elements</span>
+
+    <span class="c1"># YOUR CODE HERE</span>
+
+    <span class="k">def</span> <span class="nf">child_tag</span><span class="p">(</span><span class="n">elem_tag</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">iter</span><span class="p">():</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1">#print child</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span>
+                <span class="c1">#print element.attrib[&#39;id&#39;]</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+                <span class="c1">#print k</span>
+                <span class="k">if</span> <span class="n">LOWER_COLON</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                    <span class="n">new_k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_k</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;addr:street&#39;</span><span class="p">:</span>
+                        <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_name</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">new_k</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#Update street names</span>
+                    <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;addr:postcode&#39;</span><span class="p">:</span>
+                        <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_zip</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>  <span class="c1">#Update zip codes</span>
+                    <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;contact:phone&quot;</span><span class="p">:</span>
+                        <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_phones</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">])</span>  <span class="c1">#Update phone numbers</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c1">#print tag</span>
+                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">PROBLEMCHARS</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">elem_tag</span> <span class="o">==</span> <span class="s1">&#39;way&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span>
+                            <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_name</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">k</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#Update street names</span>
+                            <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">update_name</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="n">k</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1">#Update key to &quot;street&quot;</span>
+                    <span class="n">tag</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_tag_type</span>
+                    <span class="c1">#print tag</span>
+                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;node&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">node_field</span> <span class="ow">in</span> <span class="n">node_attr_fields</span><span class="p">:</span>
+            <span class="n">node_attribs</span><span class="p">[</span><span class="n">node_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">node_field</span><span class="p">]</span>
+
+        <span class="n">child_tag</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;node&#39;</span><span class="p">:</span> <span class="n">node_attribs</span><span class="p">,</span> <span class="s1">&#39;node_tags&#39;</span><span class="p">:</span> <span class="n">tags</span><span class="p">}</span>
+
+    <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;way&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">way_attr_fields</span><span class="p">:</span>
+            <span class="n">way_attribs</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+
+        <span class="n">child_tag</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">iter</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;nd&#39;</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">node</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                <span class="n">node</span><span class="p">[</span><span class="s1">&#39;node_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">]</span>
+                <span class="n">node</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+                <span class="n">way_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;way&#39;</span><span class="p">:</span> <span class="n">way_attribs</span><span class="p">,</span> <span class="s1">&#39;way_nodes&#39;</span><span class="p">:</span> <span class="n">way_nodes</span><span class="p">,</span> <span class="s1">&#39;way_tags&#39;</span><span class="p">:</span> <span class="n">tags</span><span class="p">}</span>
+
+
+<span class="c1"># ================================================== #</span>
+<span class="c1">#               Helper Functions                     #</span>
+<span class="c1"># ================================================== #</span>
+<span class="k">def</span> <span class="nf">get_element</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;way&#39;</span><span class="p">,</span> <span class="s1">&#39;relation&#39;</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Yield element if it is the right type of tag&quot;&quot;&quot;</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">osm_file</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">root</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span> <span class="ow">and</span> <span class="n">elem</span><span class="o">.</span><span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">elem</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">validate_element</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">SCHEMA</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raise ValidationError if element does not match schema&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">field</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">validator</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
+        <span class="n">message_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Element of type &#39;{0}&#39; has the following errors:</span><span class="se">\n</span><span class="s2">{1}&quot;</span>
+        <span class="n">error_string</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">message_string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">error_string</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">UnicodeDictWriter</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extend csv.DictWriter to handle Unicode input&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">writerow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UnicodeDictWriter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">writerow</span><span class="p">({</span>
+            <span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+        <span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">writerows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+
+<span class="c1"># ================================================== #</span>
+<span class="c1">#               Main Function                        #</span>
+<span class="c1"># ================================================== #</span>
+<span class="k">def</span> <span class="nf">process_map</span><span class="p">(</span><span class="n">file_in</span><span class="p">,</span> <span class="n">validate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Iteratively process each XML element and write to csv(s)&quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">NODES_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nodes_file</span><span class="p">,</span> \
+         <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">NODE_TAGS_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">nodes_tags_file</span><span class="p">,</span> \
+         <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">WAYS_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ways_file</span><span class="p">,</span> \
+         <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">WAY_NODES_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">way_nodes_file</span><span class="p">,</span> \
+         <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">WAY_TAGS_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">way_tags_file</span><span class="p">:</span>
+
+        <span class="n">nodes_writer</span> <span class="o">=</span> <span class="n">UnicodeDictWriter</span><span class="p">(</span><span class="n">nodes_file</span><span class="p">,</span> <span class="n">NODE_FIELDS</span><span class="p">)</span>
+        <span class="n">node_tags_writer</span> <span class="o">=</span> <span class="n">UnicodeDictWriter</span><span class="p">(</span><span class="n">nodes_tags_file</span><span class="p">,</span> <span class="n">NODE_TAGS_FIELDS</span><span class="p">)</span>
+        <span class="n">ways_writer</span> <span class="o">=</span> <span class="n">UnicodeDictWriter</span><span class="p">(</span><span class="n">ways_file</span><span class="p">,</span> <span class="n">WAY_FIELDS</span><span class="p">)</span>
+        <span class="n">way_nodes_writer</span> <span class="o">=</span> <span class="n">UnicodeDictWriter</span><span class="p">(</span><span class="n">way_nodes_file</span><span class="p">,</span> <span class="n">WAY_NODES_FIELDS</span><span class="p">)</span>
+        <span class="n">way_tags_writer</span> <span class="o">=</span> <span class="n">UnicodeDictWriter</span><span class="p">(</span><span class="n">way_tags_file</span><span class="p">,</span> <span class="n">WAY_TAGS_FIELDS</span><span class="p">)</span>
+
+        <span class="n">nodes_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+        <span class="n">node_tags_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+        <span class="n">ways_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+        <span class="n">way_nodes_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+        <span class="n">way_tags_writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+
+        <span class="n">validator</span> <span class="o">=</span> <span class="n">cerberus</span><span class="o">.</span><span class="n">Validator</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">get_element</span><span class="p">(</span><span class="n">file_in</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;way&#39;</span><span class="p">)):</span>
+            <span class="n">el</span> <span class="o">=</span> <span class="n">shape_element</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">el</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+                    <span class="n">validate_element</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">validator</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;node&#39;</span><span class="p">:</span>
+                    <span class="n">nodes_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">])</span>
+                    <span class="n">node_tags_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;node_tags&#39;</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;way&#39;</span><span class="p">:</span>
+                    <span class="n">ways_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way&#39;</span><span class="p">])</span>
+                    <span class="n">way_nodes_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way_nodes&#39;</span><span class="p">])</span>
+                    <span class="n">way_tags_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="s1">&#39;way_tags&#39;</span><span class="p">])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Note: Validation is ~ 10X slower. For the project consider using a small</span>
+    <span class="c1"># sample of the map when validating.</span>
+    <span class="n">process_map</span><span class="p">(</span><span class="n">OSM_PATH</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Overview of the Data</h2>
+<p>After writing Python code to clean the data, the updated data was written to csv files and then loaded into a database.  Here are the file sizes for the original OpenStreetMap XML file as well as the csv files, found using Python:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">hurry.filesize</span> <span class="kn">import</span> <span class="n">size</span>
+
+<span class="n">dirpath</span> <span class="o">=</span> <span class="s1">&#39;C:\Users\Quentin\Documents\Udacity\Project 3 - OSM&#39;</span>
+
+<span class="n">files_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">dirpath</span><span class="p">):</span>
+    <span class="n">files_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">filename</span><span class="p">,</span> <span class="n">size</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">))))</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">files_list</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s1">&#39;{:.&lt;40s}: {:5s}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>audit.py................................: 3K   
+County_of_Hawaii.osm....................: 69M  
+create_sample.py........................: 1K   
+file_size.py............................: 398B 
+hawaii_county.db........................: 41M  
+map.png.................................: 146K 
+map_link.txt............................: 376B 
+nodes.csv...............................: 29M  
+nodes_tags.csv..........................: 396K 
+output_8_1.png..........................: 6K   
+Project 3 (Submission 1 Zipped).zip.....: 1M   
+Project 3 - Open Street Map Data.ipynb..: 51K  
+Project.docx............................: 190K 
+Project_3.pdf...........................: 357K 
+README.txt..............................: 472B 
+references.txt..........................: 829B 
+sample.osm..............................: 7M   
+schema.py...............................: 2K   
+schema.pyc..............................: 1K   
+sqlite-shell-win32-x86-3080600.zip......: 300K 
+sqlite3.exe.............................: 544K 
+sqlite_queries.py.......................: 3K   
+Untitled.ipynb..........................: 18K  
+Update_Name.odt.........................: 6K   
+update_write_csv.py.....................: 11K  
+ways.csv................................: 1M   
+ways_nodes.csv..........................: 9M   
+ways_tags.csv...........................: 2M   
+~$roject.docx...........................: 162B 
+Project 3 - Open Street Map Data-checkpoint.ipynb: 53K  
+Untitled-checkpoint.ipynb...............: 72B  
+.gitattributes..........................: 65B  
+audit.py................................: 3K   
+create_sample.py........................: 1K   
+file_size.py............................: 398B 
+map_link.txt............................: 376B 
+Project_3.pdf...........................: 357K 
+README.md...............................: 31B  
+README.txt..............................: 493B 
+references.txt..........................: 829B 
+sample.osm..............................: 7M   
+sqlite_queries.py.......................: 3K   
+update_write_csv.py.....................: 11K  
+COMMIT_EDITMSG..........................: 15B  
+config..................................: 323B 
+description.............................: 160B 
+FETCH_HEAD..............................: 118B 
+HEAD....................................: 23B  
+index...................................: 1018B
+applypatch-msg.sample...................: 478B 
+commit-msg.sample.......................: 896B 
+post-update.sample......................: 189B 
+pre-applypatch.sample...................: 424B 
+pre-commit.sample.......................: 1K   
+pre-push.sample.........................: 1K   
+pre-rebase.sample.......................: 4K   
+pre-receive.sample......................: 544B 
+prepare-commit-msg.sample...............: 1K   
+update.sample...........................: 3K   
+exclude.................................: 240B 
+HEAD....................................: 160B 
+master..................................: 160B 
+master..................................: 142B 
+aaadc6554433f6dd49de8078b1cdc54acfcffe..: 443B 
+fc580d7986230b7129cbe4e91e1004ac4cc8cb..: 1K   
+a0a6fa116c749cadb7e64562e9512cc293da2f..: 1M   
+bb61aec6bb371a464ee6a0696e28e6c5745cf3..: 47B  
+1fea378b95af0d4896d48ca5a65a099d7bd18d..: 266B 
+f5274a77bb4e2d26f83ce319e5be6185733464..: 1K   
+f826e2878472e4b968e4a5eca2acad0674b5d7..: 281B 
+f3244302fb4866ea71d9a0514b5de040398f86..: 639B 
+85281487a3a68e5fe1d1c14420001e7ef5068e..: 433B 
+6ed9893b8d2784bdcb6e7de8ba5b828bdfdf2b..: 333K 
+c038d5cc5dd37893821fdd0f79fe1e4ab99c9c..: 250B 
+3c9f753b1b050492a6dde0169d6ca939300141..: 127B 
+a1110b5794582b53554bb1e4224b860d4e173f..: 75B  
+14f70676c36fb72f53691d0b058ae210a80b76..: 3K   
+master..................................: 41B  
+master..................................: 41B
+</pre></div>
+
+
+<p>At this point, I had come up with a few questions that I wanted to answer by querying the database using SQlite.  Below are these questions, the queries I performed using Python with the SQLite3 module, along with the results:</p>
+<h3>How Do the Number of Nodes and Ways Compare?</h3>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;hawaii_county.db&#39;</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(*) </span><span class="se">\</span>
+<span class="s1">         FROM node;&#39;</span>
+
+<span class="n">number_of_nodes</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;Number of Nodes:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number_of_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(*) </span><span class="se">\</span>
+<span class="s1">         FROM way;&#39;</span>
+
+<span class="n">number_of_ways</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;Number of Ways:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">number_of_ways</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">barplot_two_colors</span><span class="p">(</span><span class="n">xvar</span><span class="p">,</span> <span class="n">xvar2</span><span class="p">,</span> <span class="n">yvar</span><span class="p">,</span> <span class="n">yvar2</span><span class="p">,</span> <span class="n">xlab</span><span class="p">,</span> <span class="n">ylab</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ticks</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xvar</span><span class="p">,</span> <span class="n">yvar</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xvar2</span><span class="p">,</span> <span class="n">yvar2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>    
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="n">xvar</span><span class="p">,</span> <span class="n">xvar2</span><span class="p">],</span> <span class="n">ticks</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">barplot_two_colors</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">number_of_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">number_of_ways</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Number of Nodes and Ways&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Nodes&#39;</span><span class="p">,</span> <span class="s1">&#39;Ways&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Populating the interactive namespace from numpy and matplotlib
+Number of Nodes:  360720
+Number of Ways:  26775
+</pre></div>
+
+
+<p><img alt="png" src="images/osm_project_22_1.png"></p>
+<h3>How Many Tourist Attractions are on the Big Island?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(*) </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT * FROM node_tags UNION ALL SELECT * FROM way_tags) all_tags </span><span class="se">\</span>
+<span class="s1">         WHERE all_tags.key == &quot;tourism&quot; and all_tags.value == &quot;attraction&quot;;&#39;</span>
+
+<span class="n">tourism</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Number of Tourism Attractions:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tourism</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Number of Tourism Attractions:  40
+</pre></div>
+
+
+<h3>How Many Historic Sites are on the Big Island?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(*) </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT * FROM node_tags UNION ALL SELECT * FROM way_tags) all_tags </span><span class="se">\</span>
+<span class="s1">         WHERE all_tags.key == &quot;historic&quot;;&#39;</span>
+
+<span class="n">historic</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Number of Historic Sites:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">historic</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Number of Historic Sites:  25
+</pre></div>
+
+
+<h3>How Many Beaches are on the Big Island?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(*) </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT * FROM node_tags UNION ALL SELECT * FROM way_tags) all_tags </span><span class="se">\</span>
+<span class="s1">         WHERE all_tags.key == &quot;natural&quot; and all_tags.value == &quot;beach&quot;;&#39;</span>
+
+<span class="n">beaches</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Number of Beaches:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beaches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Number of Beaches:  58
+</pre></div>
+
+
+<h3>What is the Frequency for Each Zip Code on the Big Island?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT all_tags.value, COUNT(*) as num </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT * FROM node_tags UNION ALL SELECT * FROM way_tags) all_tags </span><span class="se">\</span>
+<span class="s1">         WHERE all_tags.key == &quot;postcode&quot; </span><span class="se">\</span>
+<span class="s1">         GROUP BY all_tags.value </span><span class="se">\</span>
+<span class="s1">         ORDER BY num DESC&#39;</span>
+
+<span class="n">zip_codes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">zip_codes</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Zip Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Frequency&#39;</span><span class="p">]</span>
+<span class="n">zip_codes</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">zip_codes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Frequency of Zip Codes&#39;</span>
+<span class="k">print</span> <span class="n">zip_codes</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Frequency of Zip Codes
+   Zip Code  Frequency
+1     96778         58
+2     96720         37
+3     96740         32
+4     96727          6
+5     96749          5
+6     96704          4
+7     96710          4
+8     96738          4
+9     96743          4
+10    96737          2
+11    96755          2
+12    96771          2
+13    96772          2
+14    96777          2
+15    96785          2
+16    96725          1
+17    96750          1
+18    96760          1
+19    96783          1
+</pre></div>
+
+
+<p>The results from this query surprised me since the zip codes for the Big Island’s two largest towns Hilo, and Kona are second and third on this list respectively.  Also, there appear to be a relatively high amount of occurrences for the zip code “96778.”  However, it appears that overall there is not a lot of zip code data, so perhaps 96778 is simply overrepresented in the dataset while 96720 and 96740 are underrepresented.</p>
+<h3>What are the Number of Unique Users?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT COUNT(DISTINCT(nodes_and_ways.user)) </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT user FROM node UNION ALL SELECT user FROM way) nodes_and_ways;&#39;</span>
+
+<span class="n">users</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Number of unique users:  {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Number of unique users:  314
+</pre></div>
+
+
+<h3>Who are the Top 10 Most Prolific Users?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT nodes_and_ways.user as unq_user, COUNT(*) as num </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT user FROM node UNION ALL SELECT user FROM way) nodes_and_ways </span><span class="se">\</span>
+<span class="s1">         GROUP BY unq_user </span><span class="se">\</span>
+<span class="s1">         ORDER BY num DESC </span><span class="se">\</span>
+<span class="s1">         LIMIT 10;&#39;</span>
+
+<span class="n">top_users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">top_users</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;User Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Frequency&#39;</span><span class="p">]</span>
+<span class="n">top_users</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_users</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Top 10 Users&#39;</span>
+<span class="k">print</span> <span class="n">top_users</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Top 10 Users
+                     User Name  Frequency
+1                  Tom_Holland     144965
+2                      bdiscoe     104865
+3                     ksamples      66860
+4               Chris Lawrence       6420
+5                     monaliki       6240
+6                         Vlad       5184
+7   Mission Aware Technologies       4960
+8                    InfiNorth       4553
+9                         dima       3534
+10                     OklaNHD       3454
+</pre></div>
+
+
+<h3>What are the Top 10 Most Frequent Amenities?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT value, COUNT(*) as num </span><span class="se">\</span>
+<span class="s1">         FROM (SELECT * FROM node_tags UNION ALL SELECT * FROM way_tags) all_tags </span><span class="se">\</span>
+<span class="s1">         WHERE all_tags.key == &quot;amenity&quot; </span><span class="se">\</span>
+<span class="s1">         GROUP BY value </span><span class="se">\</span>
+<span class="s1">         ORDER BY num DESC </span><span class="se">\</span>
+<span class="s1">         LIMIT 10&#39;</span>
+
+<span class="n">top_amenities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">top_amenities</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Amenity&#39;</span><span class="p">,</span> <span class="s1">&#39;Frequency&#39;</span><span class="p">]</span>
+<span class="n">top_amenities</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_amenities</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Top 10 Amenities&#39;</span>
+<span class="k">print</span> <span class="n">top_amenities</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Top 10 Amenities
+             Amenity  Frequency
+1            parking        427
+2         restaurant        107
+3            toilets         69
+4               fuel         45
+5          fast_food         35
+6               cafe         32
+7             school         32
+8   place_of_worship         31
+9          recycling         18
+10       post_office         17
+</pre></div>
+
+
+<h3>What are the Top 10 Most Frequent Restaurant Cuisines?</h3>
+<div class="highlight"><pre><span></span><span class="n">QUERY</span> <span class="o">=</span> <span class="s1">&#39;SELECT value, COUNT(*) as num </span><span class="se">\</span>
+<span class="s1">         FROM node_tags </span><span class="se">\</span>
+<span class="s1">         WHERE node_tags.key == &quot;cuisine&quot; </span><span class="se">\</span>
+<span class="s1">         GROUP BY value </span><span class="se">\</span>
+<span class="s1">         ORDER BY num DESC </span><span class="se">\</span>
+<span class="s1">         LIMIT 10&#39;</span>
+
+<span class="n">top_cuisines</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">top_cuisines</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cuisine&#39;</span><span class="p">,</span> <span class="s1">&#39;Frequency&#39;</span><span class="p">]</span>
+<span class="n">top_cuisines</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_cuisines</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s1">&#39;&#39;</span>
+<span class="k">print</span> <span class="s1">&#39;Top 10 Cuisines&#39;</span>
+<span class="k">print</span> <span class="n">top_cuisines</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Top 10 Cuisines
+      Cuisine  Frequency
+1        thai          8
+2      burger          6
+3       pizza          6
+4    american          4
+5     chinese          4
+6   ice_cream          4
+7     italian          4
+8    japanese          4
+9     mexican          4
+10   regional          4
+</pre></div>
+
+
+<p>There are many Thai restaurants in my hometown of Kona, so Thai being the most frequent cuisine is not surprising here.</p>
+<h2>Other Ideas about the Dataset</h2>
+<p>From the database query for zip codes, it is apparent there is not much zip code data and that many zip codes are missing from the dataset.  The Big Island has 32 total zip codes, yet only 19 are listed in the database.   Ideally, data currently missing zip codes could have zip codes added manually by users or programmatically by using latitude and longitude or address data to find the correct zip code. </p>
+<p>Another possible shortcoming with the data is that for tags with the amenity key, there are separate values that are very similar such as “restaurant”, “fast_food”, and “cafe.”  If these values were grouped together under a new category such as “food”, it would reduce the amount of values one would have to keep track of in the data.  However, if we did group these together under a general “food” category, this wouldn’t be helpful if one wanted to query for detailed information, such as the number of fast food restaurants, therefore this is a bit of a gray area.  A possible solution would be to create a Python dictionary for each value in tags for amenities, saving the general category as the dictionary key and the detailed value as the dictionary value.</p>
+<h2>Conclusion</h2>
+<p>After the auditing and cleaning the OpenStreetMap data for the Big Island is certainly in a better shape than when it was downloaded.  The street names and telephones now have a standard format, street names have a tag with key:  “street”, and zip codes that were erroneous were corrected.  That being said, it is still far from perfect as there are missing zip code data as well as tag values that could be more general.  </p>
+<h2>References</h2>
+<p>https://mapzen.com/data/metro-extracts/your-extracts/7fd309dd6da8</p>
+<p>https://stackoverflow.com/questions/740287/how-to-check-if-one-of-the-following-items-is-in-a-list</p>
+<p>https://www.tutorialspoint.com/python/string_replace.htm</p>
+<p>https://stackoverflow.com/questions/3728655/titlecasing-a-string-with-exceptions</p>
+<p>https://stackoverflow.com/questions/9222106/how-to-extract-information-between-two-unique-words-in-a-large-text-file</p>
+<p>https://stackoverflow.com/questions/10365225/extract-digits-in-a-simple-way-from-a-python-string</p>
+<p>http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql_query.html#pandas.read_sql_query</p>
+<p>http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html</p>
+<p>https://www.openstreetmap.org/about</p>
+<p>https://www.openstreetmap.org/#map=8/19.950/-156.962</p>
+<p>https://discussions.udacity.com/t/display-files-and-their-sizes-in-directory/186741/2</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://www.linkedin.com/feed/">LinkedIn</a></li>
+                            <li><a href="https://github.com/quentinikeno">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
