@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <title>Quentin Ikeno</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Quentin Ikeno Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Quentin Ikeno </a></h1>
+                <nav><ul>
+                    <li><a href="/category/data-analysis.html">Data Analysis</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/investigate-the-titanic-dataset.html">Investigate the Titanic Dataset</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-02-18T00:00:00-10:00">
+                Published: Sun 18 February 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
+        </address>
+<p>In <a href="/category/data-analysis.html">Data Analysis</a>.</p>
+<p>tags: <a href="/tag/python.html">Python</a> <a href="/tag/data-analysis.html">Data Analysis</a> <a href="/tag/udacity.html">Udacity</a> </p>
+</footer><!-- /.post-info --><h1>Project:  Investigate the Titanic Dataset</h1>
+<h2>Introduction</h2>
+<p>On April 25, 1912, the R.M.S. Titanic made a fatal collision with an iceberg in the North Atlantic Ocean; over 1,500 passengers and crew perished in the accident.  The purpose of this project will be to investigate and analyze a dataset of passengers who were aboard the Titanic.</p>
+<h2>Questions</h2>
+<p>Upon looking at the dataset (information about the datset is provided <a href="https://www.kaggle.com/c/titanic/data">here</a>), I began to pose a few questions that were interesting:</p>
+<ul>
+<li>What was the mean ticket fare?</li>
+<li>Where were passengers from?</li>
+<li>Does the ticket class a passenger has depend on age?</li>
+<li>Which age group was more likely to survive?</li>
+<li>Which gender was more likely to survive?</li>
+<li>Which ticket class was more likely to survive?</li>
+<li>Were families more likely to survive than single passengers?</li>
+</ul>
+<h2>Data Wrangling</h2>
+<p>Before the analysis begins, we must take an intial look at the data to see if it has any issues that need to be addressed.</p>
+<div class="highlight"><pre><span></span><span class="c1">#import modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Populating the interactive namespace from numpy and matplotlib
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1">#read the csv</span>
+<span class="n">titanic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;titanic-data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">titanic</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C85</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>C123</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Total Entries</h3>
+<div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">PassengerId</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>891
+</pre></div>
+
+
+<p>There are 891 total passenger entries in the dataset.</p>
+<h3>Missing Entries</h3>
+<div class="highlight"><pre><span></span><span class="c1">#count missing entries</span>
+<span class="n">titanic</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>PassengerId      0
+Survived         0
+Pclass           0
+Name             0
+Sex              0
+Age            177
+SibSp            0
+Parch            0
+Ticket           0
+Fare             0
+Cabin          687
+Embarked         2
+dtype: int64
+</pre></div>
+
+
+<p>Of the 891 total entries, 2 have missing entries for the passenger's port of embarkation, 177 have missing entries for passenger ages, and 687 have missing entries for passenger cabins.  Since, a majority of entries are missing from the cabin collumn of the dataset, it would be best not to use this data, and we can delete it from the dataset.</p>
+<div class="highlight"><pre><span></span><span class="c1">#delete cabin collumn from dataset</span>
+<span class="k">del</span> <span class="n">titanic</span><span class="p">[</span><span class="s1">&#39;Cabin&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>That being said, we will still use the age and port of embarkation data, and simply remove the missing entries when analyzing the incomplete data.</p>
+<h2>Analysis</h2>
+<h3>What was the mean ticket fare?</h3>
+<div class="highlight"><pre><span></span><span class="c1">#fare descriptive statistics</span>
+<span class="n">titanic</span><span class="p">[</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>count    891.000000
+mean      32.204208
+std       49.693429
+min        0.000000
+25%        7.910400
+50%       14.454200
+75%       31.000000
+max      512.329200
+Name: Fare, dtype: float64
+</pre></div>
+
+
+<p>From the descriptive statistics we can see that the mean ticket fare was £32.20, or around $4,202.22 in 2017.  </p>
+<p>Besides this, notice that the minimum fare was £0.  Perhaps someone was given a complimentary ticket or there was a stowaway.  </p>
+<h3>Where Were Passengers From?</h3>
+<div class="highlight"><pre><span></span><span class="c1"># Plot Pie Charts</span>
+<span class="k">def</span> <span class="nf">pie_chart</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span><span class="p">,</span>
+        <span class="n">autopct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">shadow</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">startangle</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#remove rows with NaN in collumn</span>
+<span class="k">def</span> <span class="nf">remove_nan_rows</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="n">titanic_copy</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">titanic_copy</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+
+<span class="c1">#remove rows with NaN in Embarked collumn</span>
+<span class="n">titanic_remove_embarked_nan</span> <span class="o">=</span> <span class="n">remove_nan_rows</span><span class="p">(</span><span class="s1">&#39;Embarked&#39;</span><span class="p">)</span>
+
+<span class="c1">#group by ports</span>
+<span class="n">ports</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">titanic_remove_embarked_nan</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+
+<span class="c1">#plot pie chart</span>
+<span class="n">pie_chart</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Cherbourg&#39;</span><span class="p">,</span> <span class="s1">&#39;Queenstown&#39;</span><span class="p">,</span> <span class="s1">&#39;Southhampton&#39;</span><span class="p">],</span> \
+          <span class="p">[</span><span class="s1">&#39;cornflowerblue&#39;</span><span class="p">,</span> <span class="s1">&#39;indianred&#39;</span><span class="p">,</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">],</span> \
+          <span class="s1">&#39;Percent of Passengers from Each Port of Embarkation&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_23_0.png"></p>
+<p>Of the 891 passenger entries, 8.7% were from Queenstown, 18.9% were from Cherbourg, and 72.4% were from Southhampton.</p>
+<h3>Does the ticket class a passenger has depend on age?</h3>
+<div class="highlight"><pre><span></span><span class="c1">#remove rows with NaN in age collumn</span>
+<span class="n">titanic_remove_age_nan</span> <span class="o">=</span> <span class="n">remove_nan_rows</span><span class="p">(</span><span class="s1">&#39;Age&#39;</span><span class="p">)</span>
+
+<span class="c1">#histogram of passenger ages</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">titanic_remove_age_nan</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span> \
+         <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Age Group&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Passengers&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Number of Passengers from Each Age Group&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&lt;matplotlib.text.Text at 0xfc1a518&gt;
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_26_1.png"></p>
+<p>For this analysis, passengers were sorted by their age into groups of 9 years (e.g. 0-9, 10-11, 20-23, etc.).  From the above histogram we can see that the largest age groups on the Titanic were passengers in their 20's and their 30's.</p>
+<div class="highlight"><pre><span></span><span class="c1">#Separate passengers into age groups (80 and higher removed)</span>
+<span class="n">age_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0-9&#39;</span><span class="p">,</span> <span class="s1">&#39;10-19&#39;</span><span class="p">,</span> <span class="s1">&#39;20-29&#39;</span><span class="p">,</span> <span class="s1">&#39;30-39&#39;</span><span class="p">,</span> <span class="s1">&#39;40-49&#39;</span><span class="p">,</span> <span class="s1">&#39;50-59&#39;</span><span class="p">,</span> <span class="s1">&#39;60-69&#39;</span><span class="p">,</span> <span class="s1">&#39;70-79&#39;</span><span class="p">]</span>
+<span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="s1">&#39;Age_Group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">titanic_remove_age_nan</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">right</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">age_labels</span><span class="p">)</span>
+
+<span class="c1">#creates barplot</span>
+<span class="k">def</span> <span class="nf">mean_barplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">xvar</span><span class="p">,</span> <span class="n">yvar</span><span class="p">,</span> <span class="n">xlab</span><span class="p">,</span> <span class="n">ylab</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ticks</span><span class="p">):</span>
+    <span class="n">survival_by</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">xvar</span><span class="p">],</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">survival_by</span><span class="p">[</span><span class="n">xvar</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">survival_by</span><span class="p">[</span><span class="n">yvar</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>    
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic_remove_age_nan</span><span class="p">,</span> <span class="s1">&#39;Age_Group&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Age Group&#39;</span><span class="p">,</span> \
+            <span class="s1">&#39;Ticket Class&#39;</span><span class="p">,</span> <span class="s1">&#39;Mean Ticket Class by Age Group&#39;</span><span class="p">,</span> <span class="n">age_labels</span><span class="p">)</span>    
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_28_0.png"></p>
+<p>Here we see that there is negative correlation between age group and mean ticket class.  Perhaps older passengers have amassed more wealth during their lifetime compared to younger people, and thus can afford to buy the higher class tickets?  Statistical tests must be performed to see if this holds true.</p>
+<h3>Which age group was more likely to survive?</h3>
+<div class="highlight"><pre><span></span><span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic_remove_age_nan</span><span class="p">,</span> <span class="s1">&#39;Age_Group&#39;</span><span class="p">,</span> <span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Age Group&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">,</span>\
+                     <span class="s1">&#39;Survival Rate by Age Group&#39;</span><span class="p">,</span> <span class="n">age_labels</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_31_0.png"></p>
+<p>This visualization shows the mean survival rate for each age group.  For this graph, since there was only one passenger aged 80 and higher, I decided to omit that persons survival rate.</p>
+<p>Survival rates appear similar across the board, around 40%, except for the age group of 0-9 years, which has a mean survival rate of 61.3%.  Thus, it appears there is being in this age group saw higher rates of survival.</p>
+<p>Keep in mind, since we are missing a portion of the data for passenger ages, there is a possibility the true survival rates could be very different from what this data is telling us.</p>
+<p>However, we do know that Titanic's Captain, Edward Smith, ordered that women and children be allowed to board the lifeboats first during the Titanic's evacauation, and this may account for the higher survival rates for passengers in the 0-9 age group.</p>
+<h3>Which gender was more likely to survive?</h3>
+<div class="highlight"><pre><span></span><span class="c1">#array counting number of men and women</span>
+<span class="n">men_women</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+
+<span class="n">pie_chart</span><span class="p">(</span><span class="n">men_women</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Women&#39;</span><span class="p">,</span> <span class="s1">&#39;Men&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;lightgreen&#39;</span><span class="p">,</span> <span class="s1">&#39;cornflowerblue&#39;</span><span class="p">],</span> <span class="s1">&#39;Passengers By Gender&#39;</span><span class="p">)</span>   
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_34_0.png"></p>
+<p>Of the 891 passenger entries in this dataset, 35.2% were women and 64.8% were men.</p>
+<div class="highlight"><pre><span></span><span class="c1">#Assign dummy variables for passenger&#39;s gender</span>
+<span class="n">titanic</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">titanic</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;female&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">)</span> 
+
+<span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Gender&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">,</span>\
+                     <span class="s1">&#39;Survival Rate by Gender&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Women&#39;</span><span class="p">,</span> <span class="s1">&#39;Men&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_36_0.png"></p>
+<p>The above visualization shows the mean survival rates for women and men respectively.</p>
+<p>We can see that the mean survival rate for men is 18.9% compared to 72.4% for women--more than twice that of the men's.  Therefore, there appears to be correlation between survival rate and gender.  </p>
+<p>One possible account for the correlation is the "Women and Children First" order, allowing more women to escape the Titanic.  Another factor could be that there were simply more men aboard the ship, and thus more men that had to be evacuated than women.</p>
+<h3>Which ticket class was more likely to survive?</h3>
+<div class="highlight"><pre><span></span><span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Ticket Class&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">,</span>\
+                     <span class="s1">&#39;Survival Rate by Ticket Class&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_39_0.png"></p>
+<p>From this bar graph of survival rate by ticket class it appears there is negative correlation between ticket class and survival rate.</p>
+<p>There are several possibilities for why this occurred:  </p>
+<p>First, it could be that more first class passengers were placed near the center of the ship and above deck, and hence closer to the lifeboats.  On the other hand, third class passengers were placed near the bow and stern of the ship, where they were farther from the lifeboats.  Furthermore, those in the stern were closer to the compartments damaged by the iceberg.
+<img alt="png" src="images/titanic_class.png"></p>
+<div class="highlight"><pre><span></span><span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Gender&#39;</span><span class="p">,</span> <span class="s1">&#39;Mean Ticket Class&#39;</span><span class="p">,</span>\
+                     <span class="s1">&#39;Ticket Class by Gender&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Women&#39;</span><span class="p">,</span> <span class="s1">&#39;Men&#39;</span><span class="p">])</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_41_0.png"></p>
+<p>Another possibility considered was that there were less children and less women travelling in third class, which would bring down the third class survival rate.  Yet, as seen earlier in the "Mean Ticket Class by Age Group" bar graph, we saw that there were actually more children travelling in third class.  Furthermore, based on the bar graph above, the mean ticket class appears roughly the same for men and women, so this scenario seems unlikely.</p>
+<div class="highlight"><pre><span></span><span class="c1">#groupby ticket class and survived and count the size of each group</span>
+<span class="n">survival_by_pclass</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Survived&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="c1">#list of number of survived by ticket class</span>
+<span class="n">survived</span> <span class="o">=</span> <span class="p">[</span><span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span>
+<span class="c1">#list of total passengers in each ticket class</span>
+<span class="n">total_pclass</span> <span class="o">=</span> <span class="p">[</span><span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>\
+                <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">survival_by_pclass</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+
+<span class="c1">#plotting bar graph</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">bar_width</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">total_pclass</span><span class="p">,</span> <span class="n">bar_width</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;cornflowerblue&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Total Passengers&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">survived</span><span class="p">,</span> <span class="n">bar_width</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;indianred&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Survived&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Ticket Class&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Passengers&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Survival of Passengers by Class&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_43_0.png"></p>
+<p>The final explanation considered was that there were simply many more third class passengers that had to be evacuated, which would bring down the overall survival rate for third class passengers.  Examining the survival of passengers by class, we see that there were more third class passengers than first and second class passengers, yet the amount of passengers who survive is about the same for third class and first class; so this could be a possible factor.</p>
+<h3>Were families more likely to survive?</h3>
+<div class="highlight"><pre><span></span><span class="c1">#scatterplot</span>
+<span class="k">def</span> <span class="nf">survival_scatter</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xlab</span><span class="p">,</span> <span class="n">ylab</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">sibsp_scatter</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">survival_by</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">]</span> <span class="p">,</span> \
+        <span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">],</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+
+    <span class="n">survival_by</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">women</span> <span class="o">=</span> <span class="n">sibsp_scatter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">)</span>
+    <span class="n">men</span> <span class="o">=</span> <span class="n">sibsp_scatter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cornflowerblue&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Female&#39;</span><span class="p">,</span> <span class="s1">&#39;Male&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">survival_scatter</span><span class="p">([</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;SibSp&#39;</span><span class="p">],</span> <span class="s1">&#39;Survival Rates by Number of Siblings and Spouses&#39;</span><span class="p">,</span> \
+                <span class="s1">&#39;Number of Siblings and/or Spouses Aboard the Titanic&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_46_0.png"></p>
+<p>In the above visualization, the goal was find out how people with a large amount of siblings aboard the Titanic fared when compared to people with only a few siblings, in regards to survival.  Since we know men and women appear to have different mean survival rates, we can group the data by males and females.</p>
+<p>That said, one limitation with this data is that it is difficult to tell which passengers were children and which were adults.  To remedy this, let's group the data again by adults and children, where we define anyone 18 years and older to be an adult and anyone under 18 to be a child.</p>
+<div class="highlight"><pre><span></span><span class="c1">#Create dummy variables for gender</span>
+<span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">titanic_remove_age_nan</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;female&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">)</span> 
+
+<span class="c1">#Creates scatterplot</span>
+<span class="k">def</span> <span class="nf">survival_scatter_adults_children</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">age_of_majority</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xlab</span><span class="p">,</span> <span class="n">ylab</span><span class="p">):</span>
+    <span class="c1">#Plots the scatterplot adult data</span>
+    <span class="k">def</span> <span class="nf">sibsp_scatter_adults</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="n">survival_by</span> <span class="o">=</span> <span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">age_of_majority</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">survival_by</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">]</span> <span class="p">,</span> \
+        <span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">],</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+
+    <span class="c1">#Plots the scatterplot children data    </span>
+    <span class="k">def</span> <span class="nf">sibsp_scatter_children</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="n">survival_by</span> <span class="o">=</span> <span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">age_of_majority</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">survival_by</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">],</span> \
+        <span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">][</span><span class="n">survival_by</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">binary</span><span class="p">],</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+
+    <span class="n">survival_by</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">women</span> <span class="o">=</span> <span class="n">sibsp_scatter_adults</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">)</span>
+    <span class="n">men</span> <span class="o">=</span> <span class="n">sibsp_scatter_adults</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cornflowerblue&#39;</span><span class="p">)</span>
+    <span class="n">girls</span> <span class="o">=</span> <span class="n">sibsp_scatter_children</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">)</span>
+    <span class="n">boys</span> <span class="o">=</span> <span class="n">sibsp_scatter_children</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cornflowerblue&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Women&#39;</span><span class="p">,</span> <span class="s1">&#39;Men&#39;</span><span class="p">,</span> <span class="s1">&#39;Girls&#39;</span><span class="p">,</span> <span class="s1">&#39;Boys&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">survival_scatter_adults_children</span><span class="p">([</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;SibSp&#39;</span><span class="p">,],</span> <span class="mi">18</span><span class="p">,</span> <span class="s1">&#39;Survival Rates by Number of Siblings and Spouses&#39;</span><span class="p">,</span> \
+                <span class="s1">&#39;Number of Siblings and/or Spouses Aboard the Titanic&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_48_0.png"></p>
+<p>Here we can see that children with lower numbers of siblings tend to fare better than men which is to be expected.  Among these children, girls tend to fare slightly better than women, but boys appear to have a lower mean survival rate than women and girls, which could be because boys in their late teens may have been considered as men when it came time to board the lifeboats.</p>
+<p>Another thing to point out, is that there seems to be negative correlation between number of siblings survival rates.  Why could this be?</p>
+<p>One explanation is that large families could have become split up during the chaos following the iceberg collision, and children who were split up would have a lower survival rate.</p>
+<p>Let's explore another possibility, by looking at the mean ticket class for people with greater than 2 siblings.</p>
+<div class="highlight"><pre><span></span><span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">titanic</span><span class="o">.</span><span class="n">SibSp</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;SibSp&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Number of Siblings Aboard the Titanic&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;Ticket Class&#39;</span><span class="p">,</span> <span class="s1">&#39;Ticket Class by Number of Siblings&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_50_0.png"></p>
+<p>We can see that the mean ticket class is near third class for people with 3 siblings and exactly third class for people with 4, 5, and 8 siblings.  It is possible people with large amounts of siblings would all book their cabins in third class to cut costs on their ticket fares.  So the low survival rates for people with many siblings may be related to the fact that third class passengers had a lower mean survival rate than first and second class passengers.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">SibSp</span><span class="p">,</span> \
+         <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Siblings and/or Spouses Aboard the Titanic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Passengers&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Number of Passengers by Amount of Siblings and/or Spouses&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&lt;matplotlib.text.Text at 0x13309588&gt;
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_52_1.png"></p>
+<p>Finally, another option could be that the number of people with many siblings aboard the titanic were small, as shown by the histogram above.  This presents the possibility that the number of people with many siblings and that survived are underrepresented in the dataset.</p>
+<div class="highlight"><pre><span></span><span class="n">survival_scatter_adults_children</span><span class="p">([</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;Parch&#39;</span><span class="p">],</span> <span class="mi">18</span><span class="p">,</span> <span class="s1">&#39;Survival Rates by Number of Parents and/or Children&#39;</span><span class="p">,</span> \
+                <span class="s1">&#39;Number of Parents and/or Children Aboard the Titanic&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_54_0.png"></p>
+<p>Let's do a similar analysis to what we did above, instead this time examining the mean survival rate by the number of parents and/or children on the Titanic.  Again, passengers were grouped by gender and adulthood.</p>
+<p>Here we see a similar situation to before, where instead of children with many siblings having a low survival rate, it is parents with many children having a low survival rate.</p>
+<div class="highlight"><pre><span></span><span class="n">mean_barplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">[</span><span class="n">titanic</span><span class="o">.</span><span class="n">Parch</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;Parch&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">,</span> <span class="s1">&#39;Number of Children Aboard the Titanic&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;Ticket Class&#39;</span><span class="p">,</span> <span class="s1">&#39;Ticket Class by Number of Children&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_56_0.png"></p>
+<p>Parents with more than 2 children had high mean ticket classes, and this could be a case where having a large familiy is correlated with ticket class and thus negatively correlated with survival rate.  Finding evidence of causality will require statistical testing.</p>
+<div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">Parch</span><span class="p">,</span> \
+         <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Parents and/or Children Aboard the Titanic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Passengers&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Number of Passengers by Amount of Parents and/or Children&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&lt;matplotlib.text.Text at 0x129361d0&gt;
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_58_1.png"></p>
+<p>Alternatively, this could be a matter of there being not many passengers with large families, and people with many children who survived are underrepresented.</p>
+<p>Another interesting thing is that girls with 2 parents and/or siblings have about the same survival rate as boys.  The reason for why this was, was unclear and more data will be needed to answer this question.</p>
+<p>In addition, it also seems that boys travelling with a nanny (i.e. they have zero parents in the dataset), have a survival rate almost equivalent to that of the men.  Let's see if we can find out more about this particular group of passengers.</p>
+<div class="highlight"><pre><span></span><span class="c1">#separates data for passengers under 18</span>
+<span class="n">boys_zero_parch</span> <span class="o">=</span> <span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="n">titanic_remove_age_nan</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">]</span>
+<span class="c1">#separates data for male passengers</span>
+<span class="n">boys_zero_parch</span> <span class="o">=</span> <span class="n">boys_zero_parch</span><span class="p">[</span><span class="n">boys_zero_parch</span><span class="p">[</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">boys_zero_parch</span><span class="o">.</span><span class="n">Parch</span><span class="p">,</span> \
+        <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Parents Aboard the Titanic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Boys&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Number of Boys by Number of Parents&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>&lt;matplotlib.text.Text at 0x12d494e0&gt;
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_60_1.png"></p>
+<p>We can first check if there is an unusually low amount of boys travelling with nannies aboard the titanic.  From the above visualization we can see that it appears about the same as the number of boys travelling with 2 parents.</p>
+<p>Since there is nothing out of the ordinary with the number of passengers, it could be that the way we defined adulthood could be a problem.  Recall that we defined any passenger under 18 years of age to be a child.  However, it could be that boys of age 17 and 16 would have been independent and responsible enough to make the voyage across the Atlantic on their own.  Therefore, let us redefine the age of majority as being 16 this time.</p>
+<div class="highlight"><pre><span></span><span class="n">survival_scatter_adults_children</span><span class="p">([</span><span class="s1">&#39;Sex_Binary&#39;</span><span class="p">,</span> <span class="s1">&#39;Parch&#39;</span><span class="p">],</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;Survival Rates by Number of Parents and/or Children&#39;</span><span class="p">,</span> \
+                <span class="s1">&#39;Number of Parents and/or Children Aboard the Titanic&#39;</span><span class="p">,</span> <span class="s1">&#39;Survival Rate&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="png" src="images/titanic_62_0.png"></p>
+<p>Now that we have changed the age of majority, the mean survival rate for boys with 0 parents on the Titanic looks similar to the mean survival rate for boys with 1 or 2 parents:  around 50%, so this could account for the low survival rate.</p>
+<h2>Conclusion</h2>
+<h3>Results</h3>
+<p>The main thing to take away from this data analysis is that some groups of passengers saw better survival rates than others:  Children under the age of 10, women, 1st class passengers, and smaller families saw the highest mean survival rates in each of their respective categories.</p>
+<h3>Limitations</h3>
+<p>The findings of this project are limited for the following reasons:</p>
+<ol>
+<li>The dataset was not the full passenger and crew list for the Titanic, therefore, the selection of this dataset could mean our results are different from the entire Titanic data.</li>
+<li>There were numerous missing entries in the data, and ommiting entries with missing data may have had a similar affect on the results as above.</li>
+<li>Finally, any correlation pointed out in this project, does not imply causation.  To determine if one factor produces a change in another factor, statistical tests must be carried out.</li>
+</ol>
+<h2>References</h2>
+<p><a href="https://www.kaggle.com/c/titanic/data">Dataset</a> provided by Kaggle.</p>
+<p>History.com Staff. "Titanic." History.com. A&amp;E Television Networks, 2009. Web. 23 July 2017. <a href="http://www.history.com/topics/titanic">http://www.history.com/topics/titanic</a>.</p>
+<p>Cohen, Jennie. "'Women and Children First'? On Sinking Ships, It's Every Man for Himself." History.com. A&amp;E Television Networks, 02 Aug. 2012. Web. 23 July 2017. <a href="http://www.history.com/news/women-and-children-first-on-sinking-ships-its-every-man-for-himself">http://www.history.com/news/women-and-children-first-on-sinking-ships-its-every-man-for-himself</a>.</p>
+<p>Eric W. Nye.  "Pounds Sterling to Dollars: Historical Conversion of Currency."  University of Wyoming.  Web.  25 July 2017. <a href="http://www.uwyo.edu/numimage/currency.htm">http://www.uwyo.edu/numimage/currency.htm</a>.</p>
+<p>Wooley, Joe.  2013.  Web.  24 July 2017. <a href="https://www.encyclopedia-titanica.org/files/1/figure-one-side-view.gif">https://www.encyclopedia-titanica.org/files/1/figure-one-side-view.gif</a></p>
+<p>https://pandas.pydata.org/pandas-docs/stable/generated/pandas.isnull.html</p>
+<p>https://pythonspot.com/en/matplotlib-pie-chart/</p>
+<p>https://www.youtube.com/watch?v=in8LJ-aR8T8&amp;index=11&amp;list=FLurR4-Efg0eUdRg7mq1HZhg&amp;t=660s</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
