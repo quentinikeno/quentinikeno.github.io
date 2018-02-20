@@ -1,117 +1,45 @@
-<!DOCTYPE html>
-<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!doctype html>
+<html lang="">	
 <head>
-    <title>Wrangle OpenStreetMap Data - Quentin Ikeno</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8"/>
+	<title>Wrangle OpenStreetMap Data - Quentin Ikeno</title>	
+	<meta name="author" content="Quentin">
+	
+
+	<meta name="description" content="I'll be cleaning OpenStreetMap data for the Big Island of Hawai'i with Python and then putting it into a database using SQLite. Project done as part of the Udacity Data Analyst Nanodegree.">
 
 
-
-<link rel="canonical" href="/wrangle-openstreetmap-data.html">
-
-        <meta name="author" content="Quentin Ikeno" />
-        <meta name="keywords" content="Python,SQL,Data Cleaning,Data Analysis,Udacity" />
-        <meta name="description" content="I&#39;ll be cleaning OpenStreetMap data for the Big Island of Hawai&#39;i with Python and then putting it into a database using SQLite. Project done as part of the Udacity Data Analyst Nanodegree." />
-
-        <meta property="og:site_name" content="Quentin Ikeno" />
-        <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Wrangle OpenStreetMap Data"/>
-        <meta property="og:url" content="/wrangle-openstreetmap-data.html"/>
-        <meta property="og:description" content="I&#39;ll be cleaning OpenStreetMap data for the Big Island of Hawai&#39;i with Python and then putting it into a database using SQLite. Project done as part of the Udacity Data Analyst Nanodegree."/>
-        <meta property="article:published_time" content="2018-02-18" />
-            <meta property="article:section" content="Data Analyst Nanodegree" />
-            <meta property="article:tag" content="Python" />
-            <meta property="article:tag" content="SQL" />
-            <meta property="article:tag" content="Data Cleaning" />
-            <meta property="article:tag" content="Data Analysis" />
-            <meta property="article:tag" content="Udacity" />
-            <meta property="article:author" content="Quentin Ikeno" />
-
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
-
-
+	<link rel="top" href="#" /><link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic|Source+Code+Pro' rel='stylesheet' type='text/css'></link>
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
 
 </head>
+	
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand">
-Quentin Ikeno            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="/category/data-analyst-nanodegree.html">Data analyst nanodegree</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-    <section id="content">
-        <article>
-            <header class="page-header">
-                <h1>
-                    <a href="/wrangle-openstreetmap-data.html"
-                       rel="bookmark"
-                       title="Permalink to Wrangle OpenStreetMap Data">
-                        Wrangle OpenStreetMap Data
-                    </a>
-                </h1>
-            </header>
-            <div class="entry-content">
-                <div class="panel">
-                    <div class="panel-body">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2018-02-18T10:21:00-10:00"> Sun 18 February 2018</time>
-    </span>
+    <div class="container">
+	  
+	  <header role="banner">
+	    <div class="feeds">
+	    </div>
+		<a href="" class="title">Quentin Ikeno</a>
+      </header>
+	
+	  <div class="wrapper">
 
-
-
-
-
-<span class="label label-default">Tags</span>
-	<a href="/tag/python.html">Python</a>
-        /
-	<a href="/tag/sql.html">SQL</a>
-        /
-	<a href="/tag/data-cleaning.html">Data Cleaning</a>
-        /
-	<a href="/tag/data-analysis.html">Data Analysis</a>
-        /
-	<a href="/tag/udacity.html">Udacity</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                </div>
-                <hr>
+		  <div role="main" class="content">
+	<article class="full">
+			
+		<h1>Wrangle OpenStreetMap Data</h1>
+		
+<div class="metadata">
+  <time datetime="2018-02-18T10:21:00-10:00" pubdate>Sun 18 February 2018</time>
+    <address class="vcard author">
+      by <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
+    </address>
+  in <a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a>
+<p class="tags">tagged <a href="/tag/python.html">Python</a>, <a href="/tag/sql.html">SQL</a>, <a href="/tag/data-cleaning.html">Data Cleaning</a>, <a href="/tag/data-analysis.html">Data Analysis</a>, <a href="/tag/udacity.html">Udacity</a></p></div>		
+		<hr>
 <h2>Introduction</h2>
 <p>OpenStreetMap is a community driven project with the goal of providing open-source geographic data for the entire Earth.  The purpose of this project will be to take OpenStreetMap data, clean it using data munging techniques, and run SQL queries once the data has been cleaned. </p>
 <p>The data I decided to use is from the map of the Island of Hawai’i (also known as the Big Island), in the State of Hawaii, United States of America.  I grew up on the Big Island, so it is an area I am familiar with, which should make checking for errors in the data easier.</p>
@@ -987,73 +915,57 @@ Number of Ways:  26775
 <p>http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html</p>
 <p>https://www.openstreetmap.org/about</p>
 <p>https://www.openstreetmap.org/#map=8/19.950/-156.962</p>
-<p>https://discussions.udacity.com/t/display-files-and-their-sizes-in-directory/186741/2</p>
-            </div>
-            <!-- /.entry-content -->
-        </article>
-    </section>
+<p>https://discussions.udacity.com/t/display-files-and-their-sizes-in-directory/186741/2</p>	
 
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-<!-- Sidebar -->
-<section class="well well-sm">
-  <ul class="list-group list-group-flush">
+	</article>
 
-<!-- Sidebar/Social -->
-<li class="list-group-item">
-  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-  <ul class="list-group" id="social">
-    <li class="list-group-item"><a href="https://www.linkedin.com/in/quentin-ikeno/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
-    <li class="list-group-item"><a href="https://github.com/quentinikeno"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-  </ul>
-</li>
-<!-- End Sidebar/Social -->
-
-<!-- Sidebar/Links -->
-<li class="list-group-item">
-  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-  <ul class="list-group" id="links">
-    <li class="list-group-item">
-      <a href="http://getpelican.com/" target="_blank">Pelican</a>
-    </li>
-    <li class="list-group-item">
-      <a href="http://python.org/" target="_blank">Python.org</a>
-    </li>
-    <li class="list-group-item">
-      <a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>
-    </li>
-  </ul>
-</li>
-<!-- End Sidebar/Links -->
-  </ul>
-</section>
-<!-- End Sidebar -->            </aside>
-        </div>
-    </div>
-</div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2018 Quentin
-            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="/theme/js/jquery.min.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
-
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+    <p>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</p>
 
 
+		  </div>	
+		  
+		  <div class="sidebar">
 
+	        <nav>
+	          <h2>Categories</h2>
+	          <ul>
+	              <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+	          </ul>
+	        </nav>
+
+	          <aside>
+	          <h2>Social</h2>
+			    <ul class="social">
+				  <li><a href="https://www.linkedin.com/in/quentin-ikeno/">linkedin</a><i></i></li>
+				  <li><a href="https://github.com/quentinikeno">github</a><i></i></li>
+			    </ul>
+			  </aside>
+
+	          <aside>
+	            <h2>Blogroll</h2>
+	            <ul>
+	                <li><a href="http://getpelican.com/">Pelican</a></li>
+	                <li><a href="http://python.org/">Python.org</a></li>
+	                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+	            </ul>
+	          </aside>
+
+		  </div>
+
+	  </div>
+
+      <footer>
+		<p role="contentinfo">
+		  © 2013 Quentin - Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>. Theme <a href="https://github.com/fle/pelican-simplegrey">pelican-simplegrey</a>.
+    	</p>
+
+	  </footer>	
+
+	</div>
+	
 
 </body>
 </html>

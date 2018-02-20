@@ -1,138 +1,276 @@
-<!DOCTYPE html>
-<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<!doctype html>
+<html lang="">	
 <head>
-    <title>Quentin Ikeno</title>
-    <!-- Using the latest rendering mode for IE -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8"/>
+	<title>Quentin Ikeno</title>	
+	<meta name="author" content="Quentin">
+	
 
-
-
-<link rel="canonical" href="">
-        <meta name="author" content="Quentin" />
-
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Quentin Ikeno" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Quentin Ikeno"/>
-        <meta property="og:url" content=""/>
-        <meta property="og:description" content="Quentin Ikeno"/>
-
-
-
-    <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-
-
-
-
+	<link rel="top" href="#" /><link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic|Source+Code+Pro' rel='stylesheet' type='text/css'></link>
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
 
 </head>
+	
 <body>
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand">
-Quentin Ikeno            </a>
-        </div>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                        <li >
-                            <a href="/category/data-analyst-nanodegree.html">Data analyst nanodegree</a>
-                        </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-</div> <!-- /.navbar -->
-<!-- Banner -->
-<!-- End Banner -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-9">
-            <article>
-                <h2><a href="/test-a-perceptual-phenomenon.html">Test a Perceptual Phenomenon</a></h2>
-                <div class="summary"><p>Performing statistical tests using R on data for particpants made to perform the Stroop Task. Done as part of the Udacity Data Analyst Nanodegree.</p>
-                    <a class="btn btn-default btn-xs" href="/test-a-perceptual-phenomenon.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
+    <div class="container">
+	  
+	  <header role="banner">
+	    <div class="feeds">
+	    </div>
+		<a href="" class="title">Quentin Ikeno</a>
+      </header>
+	
+	  <div class="wrapper">
 
-        </div>
-        <div class="col-sm-3" id="sidebar">
-            <aside>
-<!-- Sidebar -->
-<section class="well well-sm">
-  <ul class="list-group list-group-flush">
+		  <div role="main" class="content">
 
-<!-- Sidebar/Social -->
-<li class="list-group-item">
-  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
-  <ul class="list-group" id="social">
-    <li class="list-group-item"><a href="https://www.linkedin.com/in/quentin-ikeno/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
-    <li class="list-group-item"><a href="https://github.com/quentinikeno"><i class="fa fa-github-square fa-lg"></i> github</a></li>
-  </ul>
+
+
+      <article>
+        <h1><a href="/test-a-perceptual-phenomenon.html">Test a Perceptual Phenomenon</a></h1>
+        <h3>What is our independent variable?  What is our dependent variable?</h3>
+<p>The independent variable in this dataset is the type of condition (i.e. the
+congruent words condition and the incongruent words condition).  The dependent
+variable is the time taken for participants to go through the list for each 
+condition.</p>
+<h3>What is an appropriate set of hypotheses for this task?  What kind of statistical test do you expect to perform?  Justify your choices.</h3>
+<p>The set of hypotheses for this test will be:</p>
+<p><span class="math">\(H_{0}\)</span>: <span class="math">\(\mu_{I}\)</span> - <span class="math">\(\mu_{C}\)</span> <span class="math">\(=\)</span> 0</p>
+<p>(There is no significant difference between the population mean completion time
+for the incongruent words condition (<span class="math">\(\mu_{I}\)</span>) and the population mean
+completion time for the congruent words condition (<span class="math">\(\mu_{C}\)</span>)).</p>
+<p><span class="math">\(H_{A}\)</span>: <span class="math">\(\mu_{I}\)</span> - <span class="math">\(\mu_{C}\)</span> <span class="math">\(&gt;\)</span> 0</p>
+<p>(The difference between the population mean completion time for the incongruent
+words condition and the population mean completion time for the congruent words
+condition is greater than zero).</p>
+<p>I decided the appropriate statistical test to perform will be the paired sample
+t-test since:</p>
+<ul>
+<li>
+<p>We are working with dependent samples since we are comparing two sets of times
+for tests taken by the same subject.  </p>
 </li>
-<!-- End Sidebar/Social -->
-
-<!-- Sidebar/Links -->
-<li class="list-group-item">
-  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
-  <ul class="list-group" id="links">
-    <li class="list-group-item">
-      <a href="http://getpelican.com/" target="_blank">Pelican</a>
-    </li>
-    <li class="list-group-item">
-      <a href="http://python.org/" target="_blank">Python.org</a>
-    </li>
-    <li class="list-group-item">
-      <a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>
-    </li>
-  </ul>
+<li>
+<p>We do not know population standard deviations.  </p>
 </li>
-<!-- End Sidebar/Links -->
-  </ul>
-</section>
-<!-- End Sidebar -->            </aside>
+<li>
+<p>Our sample size is less than 30</p>
+</li>
+</ul>
+<p>That said, one crucial assumption we need to make in order for us to use the 
+paired t-test is that the data we sample from comes from a normal distribution.
+We will check this assumption later in the report by visaulizing our sample 
+data.</p>
+<h3>Report some descriptive statistics regarding this dataset. Include at least\</h3>
+<p>one measure of central tendency and at least one measure of variability.</p>
+<div class="highlight"><pre><span></span>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    8.63   11.90   14.36   14.05   16.20   22.33
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## [1] 3.559358
+</pre></div>
+
+
+<p>Here are some descriptive statistics for the congruent condition data.  We can 
+see that the mean time is 14.05 with a standard deviation of 3.559.  That said,
+what will the incongruent condition data look like?</p>
+<div class="highlight"><pre><span></span>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   15.69   18.72   21.02   22.02   24.05   35.26
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## [1] 4.797057
+</pre></div>
+
+
+<p>The mean time is 22.02 while the standard deviation is 4.797.  Let's get another
+look at the distribution of the data with visualizations.</p>
+<h3>Provide one or two visualizations that show the distribution of the sample data. Write one or two sentences noting what you observe about the plot or plots.</h3>
+<p><img alt="plot of chunk unnamed-chunk-4" src="/figure/Stroop-unnamed-chunk-4-1.png"></p>
+<p>Looking at the histogram for the congruent condition data, it appears as though
+the data is most likely normally distributed.  On the other hand, the histogram
+for the incongruent condition data appears as though it may have some outlier
+participants which may affect the normality of the data.</p>
+<p><img alt="plot of chunk unnamed-chunk-5" src="/figure/Stroop-unnamed-chunk-5-1.png"></p>
+<div class="highlight"><pre><span></span>## 
+##  Anderson-Darling normality test
+## 
+## data:  stroop$Congruent
+## A = 0.20967, p-value = 0.8432
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## 
+##  Anderson-Darling normality test
+## 
+## data:  stroop$Incongruent
+## A = 1.0696, p-value = 0.006709
+</pre></div>
+
+
+<p>If we look at normal probability plot for the congruent data, the points appears
+to fall a relatively straight line and is thus most likely normally distributed.
+If we perform an Anderson-Darling test of normality on the data, where 
+<span class="math">\(\alpha\)</span> = 0.05, we can see that the p-value for the test is 0.8432.  Since the 
+p-value is above 0.05, there is not enough evidence to conclude that the data 
+is not normally distributed.</p>
+<p>However, If we look at the probability plot for the incongruent data, two points
+on the right do not fall on the with the rest of the data, which suggests the 
+data may not be normally distributed.  Performing an Anderson-Darling test, with
+<span class="math">\(\alpha\)</span> = 0.05, the p-value is 0.0067, which is less than 0.05, therefore there
+is evidence that this data is not normally distributed.  This poses a problem
+for our paired t-test, since a requirement of performing the test is that the 
+data we use is normally distributed or if it is not normally distributed, we are
+using a very large sample.  Since we cannot fulfill this requirement, typically
+this means that we cannot perform the t-test and should perform some other kind
+of test.  That being said, for the sake of completing this project I will go 
+ahead and perform the paired t-test.</p>
+<h3>Now, perform the statistical test and report your results.  What is your confidence level and your critical statistic value?  Do you reject the null hypothesis or fail to reject it?  Come to a conclusion in terms of the experiment task.  Did the results match up with your expectations?</h3>
+<p>The confidence level I decided to use an <span class="math">\(\alpha\)</span> = 0.05 meaning our confidence
+level will be 0.95.  The test statistic I came up with is 8.0207.  Using a 
+t-table, the critical statistic value, with 23 degrees of freedom, is 1.7139.<br>
+So, since the test statistic (8.0207) is greater than the critical value 
+(1.7139) we should reject the null hypothesis.  We can conclude that there is 
+evidence that the difference between the population mean completion time for the incongruent condition and the congruent condition is greater than 0.</p>
+<h2>Conclusion</h2>
+<p>From these results it appears as though participants in the Stroop task take
+significantly longer when it comes to completing the list of incongruent words.
+These findings happened to match up with my expectations, as I personally took 
+longer to complete the incongruent condition when performing the Stroop task.</p>
+<h2>References</h2>
+<p>https://www.r-bloggers.com/normality-tests-for-continuous-data/</p>
+<p>http://ggplot2.tidyverse.org/reference/geom_qq.html</p>
+<p>http://www.statisticshowto.com/when-to-use-a-t-score-vs-z-score/</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+      </article>
+
+      <hr />
+
+        <div>
+          <h3>Last posts</h3>
+          <ol class="archive">
+    
+
+
+      <li>
+<a href="/exploration-of-tsa-claims-data.html" rel="bookmark" title="Permalink to Exploration of TSA Claims Data">Exploration of TSA Claims Data</a>
+  <time datetime="2018-02-19T06:48:00-10:00" pubdate>Mon 19 February 2018</time>
+<p class="tags">tags: <a href="/tag/r.html">R</a><a href="/tag/data-cleaning.html">Data Cleaning</a><a href="/tag/data-analysis.html">Data Analysis</a><a href="/tag/udacity.html">Udacity</a></p></a>      </li>
+
+
+      <li>
+<a href="/wrangle-openstreetmap-data.html" rel="bookmark" title="Permalink to Wrangle OpenStreetMap Data">Wrangle OpenStreetMap Data</a>
+  <time datetime="2018-02-18T10:21:00-10:00" pubdate>Sun 18 February 2018</time>
+<p class="tags">tags: <a href="/tag/python.html">Python</a><a href="/tag/sql.html">SQL</a><a href="/tag/data-cleaning.html">Data Cleaning</a><a href="/tag/data-analysis.html">Data Analysis</a><a href="/tag/udacity.html">Udacity</a></p></a>      </li>
+
+
+      <li>
+<a href="/investigate-the-titanic-dataset.html" rel="bookmark" title="Permalink to Investigate the Titanic Dataset">Investigate the Titanic Dataset</a>
+  <time datetime="2018-02-18T10:20:00-10:00" pubdate>Sun 18 February 2018</time>
+<p class="tags">tags: <a href="/tag/python.html">Python</a><a href="/tag/data-analysis.html">Data Analysis</a><a href="/tag/udacity.html">Udacity</a></p></a>      </li>
+
+
+          </ol>
         </div>
-    </div>
-</div>
-<footer>
-   <div class="container">
-      <hr>
-      <div class="row">
-         <div class="col-xs-10">&copy; 2018 Quentin
-            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
-            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
-            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
-         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
-      </div>
-   </div>
-</footer>
-<script src="/theme/js/jquery.min.js"></script>
 
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+		  </div>	
+		  
+		  <div class="sidebar">
 
-<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+	        <nav>
+	          <h2>Categories</h2>
+	          <ul>
+	              <li ><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+	          </ul>
+	        </nav>
 
+	          <aside>
+	          <h2>Social</h2>
+			    <ul class="social">
+				  <li><a href="https://www.linkedin.com/in/quentin-ikeno/">linkedin</a><i></i></li>
+				  <li><a href="https://github.com/quentinikeno">github</a><i></i></li>
+			    </ul>
+			  </aside>
 
+	          <aside>
+	            <h2>Blogroll</h2>
+	            <ul>
+	                <li><a href="http://getpelican.com/">Pelican</a></li>
+	                <li><a href="http://python.org/">Python.org</a></li>
+	                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+	            </ul>
+	          </aside>
 
+		  </div>
+
+	  </div>
+
+      <footer>
+		<p role="contentinfo">
+		  © 2013 Quentin - Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>. Theme <a href="https://github.com/fle/pelican-simplegrey">pelican-simplegrey</a>.
+    	</p>
+
+	  </footer>	
+
+	</div>
+	
 
 </body>
 </html>
