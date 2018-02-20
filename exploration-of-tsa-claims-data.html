@@ -1,75 +1,79 @@
+<!DOCTYPE html>
+<html lang="english">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Exploration of TSA Claims Data Introduction The Transportation Security Administration (TSA) is an agency of the U.S. Department of Homeland Security, responsible for the public saftey of...">
+        <meta name="keywords" content="Data Analysis, Data Cleaning, R, Udacity">
+        <link rel="icon" href="/favicon.ico">
 
-<!DOCTYPE HTML>
-<!--
-	Dopetrope 2.0 by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-			<title>Quentin Ikeno</title>
-			<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-			<meta charset="utf-8" />
-			<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,900,300italic" rel="stylesheet" />
-				<link rel="stylesheet" href="/theme/css/pygment.css" />
-			<noscript>
-				<link rel="stylesheet" href="/theme/css/skel-noscript.css" />
-				<link rel="stylesheet" href="/theme/css/style.css" />
-				<link rel="stylesheet" href="/theme/css/style-desktop.css" />
-			</noscript>
-	</head>
-	<body class="no-sidebar">
-		<!-- Header Wrapper -->
-			<div id="header-wrapper">
-				<div class="container">
-					<div class="row">
-						<div class="12u">
-						
-							<!-- Header -->
-								<section id="header">
-									
-									<!-- Logo -->
-									<h1><a href="/">Quentin Ikeno</a></h1>
-									
-									<!-- Nav -->
-										<nav id="nav">
-											<ul>
-											</ul>
-										</nav>
+        <title>"Exploration of TSA Claims Data" - Quentin Ikeno</title>
 
-								</section>
+        <!-- Stylesheets -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/theme/css/fonts.css" rel="stylesheet">
+        <link href="/theme/css/nest.css" rel="stylesheet">
+        <link href="/theme/css/pygment.css" rel="stylesheet">
+        <!-- /Stylesheets -->
 
-						</div>
-					</div>
-				</div>
-			</div>
-		
-		<!-- Main Wrapper -->
-			<div id="main-wrapper">
-				<div class="container">
-<div class="row">
-	<div class="12u">
-			<section>
-				<div>
-					<div class="row">
-						<div class="12u skel-cell-mainContent">
-							<!-- Content -->
-								<article class="box is-post">
-									<div class="post-infos">
-										<ul class="tags">
-											<li><a class="button" href="category/data-analyst-nanodegre.html">'data analyst nanodegre</a></li>
-												<li><a class="button button-alt" href="tag/r.html">R</a></li>
+        <!-- RSS Feeds -->
+        <!-- /RSS Feeds -->
 
-												<li><a class="button button-alt" href="tag/data-cleaning.html">Data cleaning</a></li>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
-												<li><a class="button button-alt" href="tag/data-analysis.html">Data analysis</a></li>
 
-										</ul>
-									</div>
 
-									<div class="pennant pennant-alt date">2018-02-19</div>
-									<h2>"Exploration of TSA Claims Data"</h2>
-									<h1>Exploration of TSA Claims Data</h1>
+    </head>
+
+    <body>
+
+        <!-- Header -->
+    <div class="header-container gradient">
+
+            <!-- Static navbar -->
+            <div class="container">
+                <div class="header-nav">
+                    <div class="header-logo">
+                        <a class="pull-left" href="/"><img class="mr20" src="/logo.svg" alt="logo">Quentin Ikeno</a>
+                    </div>
+                    <div class="nav pull-right">
+                    </div>
+                </div>
+            </div>
+            <!-- /Static navbar -->
+
+            <!-- Header -->
+    <!-- Header -->
+    <div class="container header-wrapper">
+        <div class="row">
+              <div class="col-lg-12">
+                  <div class="header-content">
+                      <h1 class="header-title">"Exploration of TSA Claims Data"</h1>
+                      <p class="header-date"> <a href="/author/quentin-ikeno.html">"Quentin Ikeno"</a>, Mon 19 February 2018,  <a href="/category/data-analyst-nanodegree.html">Data analyst nanodegree</a></p>
+                      <div class="header-underline"></div>
+                      <div class="clearfix"></div>
+                      <p class="pull-right header-tags">
+                          <span class="glyphicon glyphicon-tags mr5" aria-hidden="true"></span>
+<a href="/tag/data-analysis.html">Data Analysis</a>, <a href="/tag/data-cleaning.html">Data Cleaning</a>, <a href="/tag/r.html">R</a>, <a href="/tag/udacity.html">Udacity</a>                      </p>
+                  </div>
+              </div>
+        </div>
+    </div>
+    <!-- /Header -->
+            <!-- /Header -->
+
+        </div>
+        <!-- /Header -->
+
+
+        <!-- Content -->
+    <div class="container content">
+        <h1>Exploration of TSA Claims Data</h1>
 <h1>Introduction</h1>
 <p>The Transportation Security Administration (TSA) is an agency of the U.S. 
 Department of Homeland Security, responsible for the public saftey of travelers
@@ -137,14 +141,7 @@ airports in the U.S.  According to ABC news, each of these airports are in the
 top 20 of airports where TSA employees were fired for theft.</p>
 <p>Below is a map of the U.S. where TSA claims were filed, where the bubble size
 represents the number of claims.</p>
-<div class="highlight"><pre><span></span>## Error in data.frame(ll.lat = ll[1], ll.lon = ll[2], ur.lat = ur[1], ur.lon = ur[2]): arguments imply differing number of rows: 0, 1
-</pre></div>
-
-
-<div class="highlight"><pre><span></span>## Error in ggmap(map): object &#39;map&#39; not found
-</pre></div>
-
-
+<p><img alt="plot of chunk unnamed-chunk-5" src="/figure/tsa-unnamed-chunk-5-1.png"></p>
 <div class="highlight"><pre><span></span>## 
 ##                                      Other 
 ##                                      36908 
@@ -225,8 +222,7 @@ max amount is $27,220,000.</p>
 <h3>What is/are the main feature(s) of interest in your dataset?</h3>
 <p>The main features of interest in the dataset are date received, claim type,
 claim amount, status, and close amount.</p>
-<h3>What other features in the dataset do you think will help support your \</h3>
-<p>investigation into your feature(s) of interest?</p>
+<h3>What other features in the dataset do you think will help support your investigation into your feature(s) of interest?</h3>
 <p>I am interested if there is any relation between an airline and claim type.</p>
 <h3>Did you create any new variables from existing variables in the dataset?</h3>
 <p>I created three new variables by separating each date received entry by year, 
@@ -235,9 +231,7 @@ month, and day.</p>
 airports listed by their IATA airport code.  I then joined data from that 
 dataset and combined it with the data from the TSA dataset to plot the location
 of each airport on the bubble map of TSA claims locations.</p>
-<h3>Of the features you investigated, were there any unusual distributions? \</h3>
-<p>Did you perform any operations on the data to tidy, adjust, or change the form \
-of the data? If so, why did you do this?</p>
+<h3>Of the features you investigated, were there any unusual distributions?  Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?</h3>
 <p>There were some date received entries that had dates before 2002 and past 2015.
 I fixed this by changing the date received year to be the same year as the 
 incident date year.</p>
@@ -299,8 +293,7 @@ baggage fees.</p>
 <p><img alt="plot of chunk unnamed-chunk-15" src="/figure/tsa-unnamed-chunk-15-1.png"></p>
 <p>The proportion of claims denied appears to increase around 2006 or 2007.</p>
 <h1>Bivariate Analysis</h1>
-<h3>Did you observe any interesting relationships between the other features \</h3>
-<p>(not the main feature(s) of interest)?</p>
+<h3>Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?</h3>
 <p>Unfortunately, my analysis of airline and claim type did not yield any 
 unexpected results.</p>
 <h3>What was the strongest relationship you found?</h3>
@@ -321,9 +314,7 @@ each month from 2002 to 2009.  The ratio appears to be somewhat sporadic during
 2002, most likely because there were relatively few claims during 2002.  </p>
 <p>The ratio decreases over time until levelling off in 2008.</p>
 <h1>Multivariate Analysis</h1>
-<h3>Talk about some of the relationships you observed in this part of the \</h3>
-<p>investigation. Were there features that strengthened each other in terms of \
-looking at your feature(s) of interest?</p>
+<h3>Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?</h3>
 <p>Looking at claim amount divided by close amount over time seemed to be an 
 important relationship as this ratio seemed to decrease with time.</p>
 <h3>Were there any interesting or surprising interactions between features?</h3>
@@ -333,10 +324,7 @@ to the amount being asked asked for as the years go by.</p>
 <hr>
 <h1>Final Plots and Summary</h1>
 <h3>Plot One</h3>
-<div class="highlight"><pre><span></span>## Error in ggmap(map): object &#39;map&#39; not found
-</pre></div>
-
-
+<p><img alt="plot of chunk Plot_One" src="/figure/tsa-Plot_One-1.png"></p>
 <h3>Description One</h3>
 <p>The airports with the most claims are tend to be heavily trafficked airports in
 large cities such as JFK International Airport in New York or LAX in Los 
@@ -377,100 +365,46 @@ or airport baggage handlers and the TSA was mistakenly blamed.</p>
 mixed feelings about the results.  On one hand, I think most will be pleased to 
 know that TSA claims have been decreasing since 2004, which is a sign that the 
 agency may be improving its measures to prevent damage and theft of passengers' personal belongings.  On the other hand, for those who are victims of theft, the fact that over 50% of all claims between 2002 and 2015 were denied may not be a satisfying outcome.</p>
-								</article>
-						</div>
-					</div>
-				</div>
-			</section>
-	</div>
-</div>
 
-				</div>
-			</div>
 
-		<!-- Footer Wrapper -->
-			<div id="footer-wrapper">
-				<!-- Footer -->
-					<section id="footer" class="container">
-						<div class="row">
-							<div class="8u">
-								<section>
-									<header>
-										<h2>Latest articles</h2>
-									</header>
-									<ul class="dates">
-										<li>
-											<span class="date">Feb <strong>19</strong></span>
-											<h3><a href="exploration-of-tsa-claims-data.html">"Exploration of TSA Claims Data"</a></h3>
-											<p><h1>Exploration of TSA Claims Data</h1>
-<h1>Introduction</h1>
-<p>The Transportation Security Administration (TSA) is an agency of the U.S. 
-Department of Homeland Security, responsible for the public saftey of travelers
-in the United States.</p>
-<p>Here we will be exploring claims data against the TSA from 2002 to 2015.</p>
-<h1>Univariate Plots Section …</h1></p>
-										</li>
-										<li>
-											<span class="date">Feb <strong>18</strong></span>
-											<h3><a href="investigate-the-titanic-dataset.html">Investigate the Titanic Dataset</a></h3>
-											<p><h1>Project:  Investigate the Titanic Dataset</h1>
-<h2>Introduction</h2>
-<p>On April 25, 1912, the R.M.S. Titanic made a fatal collision with an iceberg in the North Atlantic Ocean; over 1,500 passengers and crew perished in the accident.  The purpose of this project will be to investigate and analyze a dataset …</p></p>
-										</li>
-										<li>
-											<span class="date">Feb <strong>18</strong></span>
-											<h3><a href="wrangle-openstreetmap-data.html">Wrangle OpenStreetMap Data</a></h3>
-											<p><h1>Project: Wrangle OpenStreetMap Data</h1>
-<hr>
-<h2>Introduction</h2>
-<p>OpenStreetMap is a community driven project with the goal of providing open-source geographic data for the entire Earth.  The purpose of this project will be to take OpenStreetMap data, clean it using data munging techniques, and run SQL queries once the data has been cleaned …</p></p>
-										</li>
-									</ul>
-								</section>
-							</div>
-						</div>
-						<div class="row">
-							<div class="4u">
-								<section>
-									<header>
-										<h2>Blogroll</h2>
-									</header>
-									<ul class="divided">
-											<li><a href="http://getpelican.com/">Pelican</a></li>
-											<li><a href="http://python.org/">Python.org</a></li>
-											<li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-									</ul>
-								</section>
-							</div>
-							<div class="4u">
-								<section>
-									<header>
-										<h2>Categories</h2>
-									</header>
-									<ul class="divided">
-											<li><a href="/category/data-analyst-nanodegre.html">'Data Analyst Nanodegre</a></li>
-											<li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
-									</ul>
-								</section>
-							</div>
-							<div class="4u">
-							
-								<section>
-									<header>
-										<h2>Contact</h2>
-									</header>
-									<ul class="social">
-									</ul>
-								</section>
-							</div>
-						</div>
-					</section>
-			</div>
-		<script src="/theme/js/jquery.min.js"></script>
-		<script src="/theme/js/jquery.dropotron.js"></script>
-		<script src="/theme/js/config.js"></script>
-		<script src="/theme/js/skel.min.js"></script>
-		<script src="/theme/js/skel-panels.min.js"></script>
-		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><link rel="stylesheet" href="/theme/css/ie8.css" /><![endif]-->
-	</body>
+        
+    </div>
+        <!-- /Content --> 
+
+        <!-- Footer -->
+        <div class="footer gradient-2">
+            <div class="container footer-container ">
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title"></div>
+                        <ul class="list-unstyled">
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title"></div>
+                        <ul class="list-unstyled">
+                            <li><a href="https://www.linkedin.com/in/quentin-ikeno/" target="_blank">LinkedIn</a></li>
+                            <li><a href="https://github.com/quentinikeno" target="_blank">Github</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                        <div class="footer-title"></div>
+                        <ul class="list-unstyled">
+                            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+                            <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+                        </ul>
+                    </div> 
+                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                        <p class="pull-right text-right">
+                            <small><em>Proudly powered by <a href="http://docs.getpelican.com/" target="_blank">pelican</a></em></small><br/>
+                            <small><em>Theme and code by <a href="https://github.com/molivier" target="_blank">molivier</a></em></small><br/>
+                            <small></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Footer -->
+    </body>
 </html>
