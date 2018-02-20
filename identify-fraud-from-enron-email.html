@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Identify Fraud from Enron Email - Quentin Ikeno</title>	
+	<meta name="author" content="Quentin">
+	
+
+	<meta name="description" content="Using machine learning to identify perpetrators of fraud using machine learning. Done as part of Udacity's Data Analyst Nanodegree.">
+
+
+	<link rel="top" href="#" /><link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic|Source+Code+Pro' rel='stylesheet' type='text/css'></link>
+	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+		
+
+</head>
+	
+<body>
+
+    <div class="container">
+	  
+	  <header role="banner">
+	    <div class="feeds">
+	    </div>
+		<a href="" class="title">Quentin Ikeno</a>
+      </header>
+	
+	  <div class="wrapper">
+
+		  <div role="main" class="content">
+	<article class="full">
+			
+		<h1>Identify Fraud from Enron Email</h1>
+		
+<div class="metadata">
+  <time datetime="2018-02-19T09:09:00-10:00" pubdate>Mon 19 February 2018</time>
+    <address class="vcard author">
+      by <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
+    </address>
+  in <a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a>
+<p class="tags">tagged <a href="/tag/python.html">Python</a>, <a href="/tag/sci-kit-learn.html">sci-kit learn</a>, <a href="/tag/machine-learning.html">Machine Learning</a>, <a href="/tag/udacity.html">Udacity</a></p></div>		
+		<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="n">HTML</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;&lt;script&gt;</span>
+<span class="s1">code_show=true; </span>
+<span class="s1">function code_toggle() {</span>
+<span class="s1"> if (code_show){</span>
+<span class="s1"> $(&#39;div.input&#39;).hide();</span>
+<span class="s1"> } else {</span>
+<span class="s1"> $(&#39;div.input&#39;).show();</span>
+<span class="s1"> }</span>
+<span class="s1"> code_show = !code_show</span>
+<span class="s1">} </span>
+<span class="s1">$( document ).ready(code_toggle);</span>
+<span class="s1">&lt;/script&gt;</span>
+<span class="s1">The raw code for this IPython notebook is by default hidden for easier reading.</span>
+<span class="s1">To toggle on/off the raw code, click &lt;a href=&quot;javascript:code_toggle()&quot;&gt;here&lt;/a&gt;.&#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<script>
+code_show=true; 
+function code_toggle() {
+ if (code_show){
+ $('div.input').hide();
+ } else {
+ $('div.input').show();
+ }
+ code_show = !code_show
+} 
+$( document ).ready(code_toggle);
+</script>
+
+<p>The raw code for this IPython notebook is by default hidden for easier reading.
+To toggle on/off the raw code, click <a href="javascript:code_toggle()">here</a>.</p>
+<h2>Understanding the Dataset</h2>
+<p><em>Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?</em></p>
+<blockquote>
+<p>In 2000, Enron was one of the largest companies in the United States. By 2002, it had collapsed into bankruptcy due to widespread corporate fraud. In the resulting Federal investigation, a significant amount of typically confidential information entered into the public record, including tens of thousands of emails and detailed financial data for top executives.</p>
+</blockquote>
+<p>The goal of this project will be to use publicly available data released from the Federal investigation into fraud at Enron, and use it to create a person of interest identifier.  This identifier will use email and financial data from Enron executives to try and find individuals who are persons of interest (POI).  For the purpose of this project, a POI is defined as an employee who was indicted, reached a settlement or plea deal with the government, or testified in exchange for prosecution immunity.</p>
+<p>To accomplish the goal of creating a POI identifier, we will be utilizing machine learning algorithms.  What makes machine learning useful is its ability to quickly learn from a dataset and then categorize or make predictions on data the machine has never seen before, which is exactly what we need to create our POI identifier.</p>
+<h3>Data Exploration</h3>
+<p>Before we get started creating our POI identifier, let's examine the data we are working with.  We can look at certain characteristics of the data (e.g. total number of data points) below:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="n">enron_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../final_project/final_project_dataset.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
+
+<span class="k">print</span> <span class="s1">&#39;Size of Enron Dataset:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">enron_data</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s2">&quot;Number of features for each person:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">enron_data</span><span class="p">[</span><span class="s2">&quot;SKILLING JEFFREY K&quot;</span><span class="p">])</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;poi&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">+=</span><span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;Number of POI&#39;s:&quot;</span><span class="p">,</span> <span class="n">count</span>
+
+<span class="k">print</span> <span class="s2">&quot;Number of Non-POI&#39;s&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">enron_data</span><span class="p">)</span> <span class="o">-</span> <span class="n">count</span>
+
+<span class="n">sal_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;salary&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span><span class="p">:</span>
+        <span class="n">sal_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;People with quantifiable salaries:&quot;</span><span class="p">,</span> <span class="n">sal_count</span>
+
+<span class="n">poi_sal_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;salary&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span> <span class="ow">and</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;poi&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">poi_sal_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;POI&#39;s with quantifiable salaries:&quot;</span><span class="p">,</span> <span class="n">poi_sal_count</span>
+
+<span class="n">email_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;email_address&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span><span class="p">:</span>
+        <span class="n">email_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;People with known email addresses:&quot;</span><span class="p">,</span> <span class="n">email_count</span>
+
+<span class="n">poi_email_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;email_address&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span> <span class="ow">and</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;poi&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">poi_email_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;POI&#39;s with known email addresses:&quot;</span><span class="p">,</span> <span class="n">poi_email_count</span>
+
+<span class="n">tot_pay_nan_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;total_payments&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NaN&#39;</span><span class="p">:</span>
+        <span class="n">tot_pay_nan_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s1">&#39;Number of people with NaN for total payments:&#39;</span><span class="p">,</span> <span class="n">tot_pay_nan_count</span>
+
+<span class="n">poi_tot_pay_nan_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">enron_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;total_payments&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NaN&#39;</span> <span class="ow">and</span> <span class="n">enron_data</span><span class="p">[</span><span class="n">person</span><span class="p">][</span><span class="s1">&#39;poi&#39;</span><span class="p">]):</span>
+        <span class="n">poi_tot_pay_nan_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span> <span class="s2">&quot;Number of POI&#39;s with NaN for total payments:&quot;</span><span class="p">,</span> <span class="n">poi_tot_pay_nan_count</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Size of Enron Dataset: 146
+Number of features for each person: 21
+Number of POI&#39;s: 18
+Number of Non-POI&#39;s 128
+People with quantifiable salaries: 95
+POI&#39;s with quantifiable salaries: 17
+People with known email addresses: 111
+POI&#39;s with known email addresses: 18
+Number of people with NaN for total payments: 21
+Number of POI&#39;s with NaN for total payments: 0
+</pre></div>
+
+
+<p>There are <strong>146</strong> data points with <strong>21</strong> different features (<strong>14</strong> financial features, <strong>6</strong> email features, and <strong>1</strong> label to indicate POI's) included for each point.  <strong>18</strong> of these points are POI's.</p>
+<h3>Outlier Investigation</h3>
+<p>Next let's look to see if their are any outliers by looking at the data for salaries and bonuses.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../tools/&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">feature_format</span> <span class="kn">import</span> <span class="n">featureFormat</span><span class="p">,</span> <span class="n">targetFeatureSplit</span>
+
+<span class="n">data_dict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../final_project/final_project_dataset.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">enron_outliers</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Plot features from dataframe and list potential outliers for bonus and salary.&#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="s1">&#39;remove&#39;</span><span class="p">:</span>
+        <span class="c1">#remove &#39;TOTAL&#39; from dictionary</span>
+        <span class="n">data_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;TOTAL&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1">#convert data_dict to pandas df</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">employees</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">new_features_list</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1">#scatterplot of salary and bonus</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">f1</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">f2</span><span class="p">],</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;poi&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span>
+
+    <span class="k">print</span> <span class="s2">&quot;Potential Outliers:&quot;</span>
+    <span class="k">for</span> <span class="n">employee</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">employee</span><span class="p">][</span><span class="s1">&#39;salary&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span><span class="p">)</span> <span class="ow">and</span>  \
+                <span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">employee</span><span class="p">][</span><span class="s1">&#39;bonus&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;NaN&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">employee</span><span class="p">][</span><span class="s1">&#39;salary&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000000</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">employee</span><span class="p">][</span><span class="s1">&#39;bonus&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5000000</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">employee</span><span class="p">)</span>
+
+<span class="n">enron_outliers</span><span class="p">(</span><span class="s1">&#39;salary&#39;</span><span class="p">,</span> <span class="s1">&#39;bonus&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Potential Outliers:
+LAY KENNETH L
+SKILLING JEFFREY K
+TOTAL
+</pre></div>
+
+
+<p><img alt="png" src="images/enron_ml_12_1.png"></p>
+<p>Looking at the above scatterplot there is one combination of salary and bonus that is significantly higher than all the others which means it could be an outlier.  To check what data points this could be we can print all executives with salary above \$1,000,000 and bonus above $5,000,000.  Of our potential outliers, the first two are <strong>LAY KENNETH L</strong> and <strong>SKILLING JEFFREY K</strong>, the former chairman and CEO of Enron respectively, as well as persons of interest, so we will leave them in the dataset.  However, the last potential outlier is <strong>TOTAL</strong> which represents the total salary and bonuses of every person in the dataset.  Since this information will not help us create our POI identifier, we can remove it from the dataset.  The data without the outlier has been plotted below.</p>
+<div class="highlight"><pre><span></span><span class="n">enron_outliers</span><span class="p">(</span><span class="s1">&#39;salary&#39;</span><span class="p">,</span> <span class="s1">&#39;bonus&#39;</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="s1">&#39;remove&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Potential Outliers:
+LAY KENNETH L
+SKILLING JEFFREY K
+</pre></div>
+
+
+<p><img alt="png" src="images/enron_ml_14_1.png"></p>
+<p>Next, I wanted to find and remove data points with all or nearly all missing data</p>
+<div class="highlight"><pre><span></span><span class="c1">#Find employees with the most missing data</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+    <span class="n">nan_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">data_point</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">data_point</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data_point</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NaN&#39;</span><span class="p">:</span>
+            <span class="n">nan_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nan_count</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">name</span>
+        <span class="k">print</span> <span class="n">data_point</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>LOCKHART EUGENE E
+{&#39;salary&#39;: &#39;NaN&#39;, &#39;to_messages&#39;: &#39;NaN&#39;, &#39;deferral_payments&#39;: &#39;NaN&#39;, &#39;total_payments&#39;: &#39;NaN&#39;, &#39;exercised_stock_options&#39;: &#39;NaN&#39;, &#39;bonus&#39;: &#39;NaN&#39;, &#39;restricted_stock&#39;: &#39;NaN&#39;, &#39;shared_receipt_with_poi&#39;: &#39;NaN&#39;, &#39;restricted_stock_deferred&#39;: &#39;NaN&#39;, &#39;total_stock_value&#39;: &#39;NaN&#39;, &#39;expenses&#39;: &#39;NaN&#39;, &#39;loan_advances&#39;: &#39;NaN&#39;, &#39;from_messages&#39;: &#39;NaN&#39;, &#39;other&#39;: &#39;NaN&#39;, &#39;from_this_person_to_poi&#39;: &#39;NaN&#39;, &#39;poi&#39;: False, &#39;director_fees&#39;: &#39;NaN&#39;, &#39;deferred_income&#39;: &#39;NaN&#39;, &#39;long_term_incentive&#39;: &#39;NaN&#39;, &#39;email_address&#39;: &#39;NaN&#39;, &#39;from_poi_to_this_person&#39;: &#39;NaN&#39;}
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1">#Remove Eugene Lockhart from data_dict</span>
+<span class="k">del</span> <span class="n">data_dict</span><span class="p">[</span><span class="s1">&#39;LOCKHART EUGENE E&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>I was able to find and remove one data point, <strong>Eugene E. Lockhart</strong>, that had missing data for all features except for the POI feature.  </p>
+<h2>Optimize Feature Selection/Engineering</h2>
+<p><em>What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.</em></p>
+<h3>Engineering New Features</h3>
+<p>In addition to the existing features, I decided to create three new ones:</p>
+<ul>
+<li><strong>fraction_to_poi</strong> - The proportion of a person's sent emails that were sent to a POI</li>
+<li><strong>fraction_from_poi</strong> - The proportion of a person's receieved emails that were sent from a POI </li>
+<li><strong>fraction_exercised_stock</strong> - The proportion of a person's exercised stock options vs. their total stock</li>
+</ul>
+<p>The idea behind creating the first two features is that POI's may email other POI's at higher rates than non-POI's.  Therefore, these features can be used to identify whether an employee shared the majority of their emails with POI's.</p>
+<p>Similarly, the final feature was made with the intuition that POI's may have higher amounts of exercised stock options when compared to their total stock options.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">computeFraction</span><span class="p">(</span> <span class="n">poi_messages</span><span class="p">,</span> <span class="n">all_messages</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; given a number messages to/from POI (numerator) </span>
+<span class="sd">        and number of all messages to/from a person (denominator),</span>
+<span class="sd">        return the fraction of messages to/from that person</span>
+<span class="sd">        that are from/to a POI</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">poi_messages</span> <span class="o">==</span> <span class="s2">&quot;NaN&quot;</span> <span class="ow">or</span> <span class="n">all_messages</span> <span class="o">==</span> <span class="s2">&quot;NaN&quot;</span><span class="p">):</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">poi_messages</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">all_messages</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fraction</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+
+    <span class="n">data_point</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="n">from_poi_to_this_person</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;from_poi_to_this_person&quot;</span><span class="p">]</span>
+    <span class="n">to_messages</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;to_messages&quot;</span><span class="p">]</span>
+    <span class="n">fraction_from_poi</span> <span class="o">=</span> <span class="n">computeFraction</span><span class="p">(</span> <span class="n">from_poi_to_this_person</span><span class="p">,</span> <span class="n">to_messages</span> <span class="p">)</span>
+    <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;fraction_from_poi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fraction_from_poi</span>
+
+
+    <span class="n">from_this_person_to_poi</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;from_this_person_to_poi&quot;</span><span class="p">]</span>
+    <span class="n">from_messages</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;from_messages&quot;</span><span class="p">]</span>
+    <span class="n">fraction_to_poi</span> <span class="o">=</span> <span class="n">computeFraction</span><span class="p">(</span> <span class="n">from_this_person_to_poi</span><span class="p">,</span> <span class="n">from_messages</span> <span class="p">)</span>
+    <span class="n">data_point</span><span class="p">[</span><span class="s2">&quot;fraction_to_poi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fraction_to_poi</span>
+
+
+    <span class="n">exercised_stock_options</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s1">&#39;exercised_stock_options&#39;</span><span class="p">]</span>
+    <span class="n">total_stock_value</span> <span class="o">=</span> <span class="n">data_point</span><span class="p">[</span><span class="s1">&#39;total_stock_value&#39;</span><span class="p">]</span>
+    <span class="n">fraction_exercised_stock</span> <span class="o">=</span> <span class="n">computeFraction</span><span class="p">(</span> <span class="n">exercised_stock_options</span><span class="p">,</span> <span class="n">total_stock_value</span><span class="p">)</span>
+    <span class="n">data_point</span><span class="p">[</span><span class="s1">&#39;fraction_exercised_stock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fraction_exercised_stock</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">features_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;poi&#39;</span><span class="p">,</span><span class="s1">&#39;salary&#39;</span><span class="p">,</span> <span class="s1">&#39;deferral_payments&#39;</span><span class="p">,</span> <span class="s1">&#39;total_payments&#39;</span><span class="p">,</span> <span class="s1">&#39;loan_advances&#39;</span><span class="p">,</span> <span class="s1">&#39;bonus&#39;</span><span class="p">,</span> <span class="s1">&#39;restricted_stock_deferred&#39;</span><span class="p">,</span> 
+                 <span class="s1">&#39;deferred_income&#39;</span><span class="p">,</span> <span class="s1">&#39;total_stock_value&#39;</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">,</span> <span class="s1">&#39;exercised_stock_options&#39;</span><span class="p">,</span> <span class="s1">&#39;other&#39;</span><span class="p">,</span> 
+                 <span class="s1">&#39;long_term_incentive&#39;</span><span class="p">,</span> <span class="s1">&#39;restricted_stock&#39;</span><span class="p">,</span> <span class="s1">&#39;director_fees&#39;</span><span class="p">,</span> <span class="s1">&#39;shared_receipt_with_poi&#39;</span><span class="p">,</span> <span class="s2">&quot;fraction_from_poi&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;fraction_to_poi&quot;</span><span class="p">,</span> <span class="s1">&#39;fraction_exercised_stock&#39;</span><span class="p">]</span> 
+
+<span class="c1">#split training and testing data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">featureFormat</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">features_list</span><span class="p">)</span>
+<span class="n">labels</span><span class="p">,</span> <span class="n">features</span> <span class="o">=</span> <span class="n">targetFeatureSplit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">features_train</span><span class="p">,</span> <span class="n">features_test</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">,</span> <span class="n">labels_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span> <span class="o">=</span> <span class="n">labels</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Feature Selection</h3>
+<p>In order to pare down the number of features, univariate feature selection was done using sci-kit learn's <em>SelectKBest</em> algorithm.  I decided to use 10 of the 22 available features and <em>SelectKBest</em> assigned scores to each feature, returning the 10 with the highest scores.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">SelectKBest</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="n">skb</span> <span class="o">=</span> <span class="n">SelectKBest</span><span class="p">(</span><span class="n">k</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">gnb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;skb&#39;</span><span class="p">,</span> <span class="n">skb</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;gnb&#39;</span><span class="p">,</span> <span class="n">gnb</span><span class="p">)])</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_train</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">)</span>
+
+<span class="c1">#indices for features chosen by SelectKBest</span>
+<span class="n">skb_feat_index</span> <span class="o">=</span> <span class="n">skb</span><span class="o">.</span><span class="n">get_support</span><span class="p">(</span><span class="n">indices</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="c1">#Make a dictionary of features with their scores</span>
+<span class="n">my_features_score</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skb_feat_index</span><span class="p">:</span>
+    <span class="n">my_features_score</span><span class="p">[</span><span class="n">features_list</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">skb</span><span class="o">.</span><span class="n">scores_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="c1">#print my_features_score</span>
+
+<span class="n">my_features_list</span> <span class="o">=</span> <span class="n">my_features_score</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="n">my_features_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;poi&#39;</span><span class="p">)</span>
+<span class="c1">#print my_features_list</span>
+</pre></div>
+
+
+<table>
+<thead>
+<tr>
+<th>feature</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>total_stock_value</td>
+<td>24.61</td>
+</tr>
+<tr>
+<td>exercised_stock_options</td>
+<td>23.72</td>
+</tr>
+<tr>
+<td>salary</td>
+<td>20.34</td>
+</tr>
+<tr>
+<td>bonus</td>
+<td>15.76</td>
+</tr>
+<tr>
+<td>deferred_income</td>
+<td>11.77</td>
+</tr>
+<tr>
+<td>total_payments</td>
+<td>9.07</td>
+</tr>
+<tr>
+<td>loan_advances</td>
+<td>7.35</td>
+</tr>
+<tr>
+<td>other</td>
+<td>7.31</td>
+</tr>
+<tr>
+<td>long_term_incentive</td>
+<td>5.52</td>
+</tr>
+</tbody>
+</table>
+<p>Above is a table of the 10 features given by <em>SelectKBest</em> along with their scores.  As it turns out, none of the engineered features ended up in the top 10, which I found surprising.</p>
+<h3>Feature Scaling</h3>
+<p>Feauture scaling of the data was not necessary as PCA was not performed.  In addition, the machine learning algorithms I decided to use (Gaussian Naive Bayes and Random Forest) do not require scaling as explained by this <a href="https://discussions.udacity.com/t/when-would-we-not-use-feature-scaling/290523/2">forum post</a>.  To summarize, the Naive Bayes algorithm does not require feature scaling because it generates probabilities for each feature individually, assuming no correlation between any of the features.  The Decision Trees used in Random Forests also do not require feature scaling since tree splits are based on each feature and are independent of one another.</p>
+<h2>Pick and Tune an Algorithm</h2>
+<p><em>What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?</em></p>
+<h3>Pick an Algorithm</h3>
+<p>The first algorithm I decided to try was Naive Bayes.  Before implementing the algorithm, the data was split into training and testing data using <em>train_test_split</em>.  I found that evaluation metrics (accuracy, precision, recall, and f1 score) for Naive Bayes were considerably better when using the <em>stratify</em> parameter for <em>train_test_split</em> than when not using the parameter.  </p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">featureFormat</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">my_features_list</span><span class="p">)</span>
+<span class="n">labels</span><span class="p">,</span> <span class="n">features</span> <span class="o">=</span> <span class="n">targetFeatureSplit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">features_train</span><span class="p">,</span> <span class="n">features_test</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">,</span> <span class="n">labels_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span> <span class="o">=</span> <span class="n">labels</span><span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_train</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">)</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features_test</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">labels_test</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Naive Bayes&quot;</span>
+<span class="k">print</span> <span class="s2">&quot;accuracy:&quot;</span><span class="p">,</span><span class="n">accuracy</span>
+<span class="n">target_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Non-POI&quot;</span><span class="p">,</span> <span class="s2">&quot;POI&quot;</span><span class="p">]</span>
+<span class="k">print</span> <span class="s2">&quot;Classification Report:&quot;</span> 
+<span class="k">print</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_true</span> <span class="o">=</span> <span class="n">labels_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">,</span> <span class="n">target_names</span> <span class="o">=</span> <span class="n">target_names</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Naive Bayes
+accuracy: 0.810344827586
+Classification Report:
+             precision    recall  f1-score   support
+
+    Non-POI       0.88      0.90      0.89        51
+        POI       0.17      0.14      0.15         7
+
+avg / total       0.80      0.81      0.80        58
+</pre></div>
+
+
+<p>The second algorithm I tried was a Random Forest Classifier.  Comparing evaluation metrics between this classifier and Naive Bayes, the only differences were that accuracy, average recall, and average f1-score were slightly higher for Random Forest, while average precision was the same for both algorithms.  That said, since the Random Forest Classifier performed the best of the two algorithms I tried, I decided to go with this algorithm to use in the POI identifier.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_train</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">)</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features_test</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">labels_test</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Random Forest&quot;</span>
+<span class="k">print</span> <span class="s2">&quot;accuracy:&quot;</span><span class="p">,</span><span class="n">accuracy</span>
+<span class="k">print</span> <span class="s2">&quot;Classification Report:&quot;</span> 
+<span class="k">print</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_true</span> <span class="o">=</span> <span class="n">labels_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">,</span> <span class="n">target_names</span> <span class="o">=</span> <span class="n">target_names</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Random Forest
+accuracy: 0.844827586207
+Classification Report:
+             precision    recall  f1-score   support
+
+    Non-POI       0.89      0.94      0.91        51
+        POI       0.25      0.14      0.18         7
+
+avg / total       0.81      0.84      0.83        58
+</pre></div>
+
+
+<h3>Algorithm Tuning</h3>
+<p><em>What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? What parameters did you tune? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).</em></p>
+<p>When one says that they are tuning the parameters of an algorithm, this means that they are testing different parameter values for the algorithm they are using.  The goal of this is to indentify the optimal combination of parameters that provides the best results, while maintaining performance.  What can happen if one does not tune the parameters of their algorithm well, is that either the algorithm will provide results that are not as good as they could potentially be or the code will take an undesirably long time to run.</p>
+<p>Tuning was done using <em>GridSearchCV</em> to go through multiple combinations of parameters tunes to find the optimal combination and then return a classifier using these optimal parameter tunes.  The Random Forest paremeters tuned were:</p>
+<ul>
+<li><strong>min_samples_split</strong> - The minimum number of samples required to split an internal node</li>
+<li><strong>max_features</strong> - The number of  features to consider when looking for the best split</li>
+<li><strong>criterion</strong> - Which measure of impurity to use for the decision tree splits</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">rfc</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+              <span class="s1">&#39;max_features&#39;</span><span class="p">:(</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;log2&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;criterion&#39;</span><span class="p">:(</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;entropy&#39;</span><span class="p">)</span>
+             <span class="p">}</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">rfc</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">n_jobs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_train</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">)</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features_test</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">labels_test</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Random Forest w/ Tuning&quot;</span>
+<span class="k">print</span> <span class="s2">&quot;accuracy:&quot;</span><span class="p">,</span><span class="n">accuracy</span>
+<span class="k">print</span> <span class="s2">&quot;Classification Report:&quot;</span> 
+<span class="k">print</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_true</span> <span class="o">=</span> <span class="n">labels_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">,</span> <span class="n">target_names</span> <span class="o">=</span> <span class="n">target_names</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Best Parameters:&quot;</span><span class="p">,</span><span class="n">clf</span><span class="o">.</span><span class="n">best_params_</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Random Forest w/ Tuning
+accuracy: 0.844827586207
+Classification Report:
+             precision    recall  f1-score   support
+
+    Non-POI       0.89      0.94      0.91        51
+        POI       0.25      0.14      0.18         7
+
+avg / total       0.81      0.84      0.83        58
+
+Best Parameters: {&#39;max_features&#39;: &#39;auto&#39;, &#39;min_samples_split&#39;: 2, &#39;criterion&#39;: &#39;entropy&#39;}
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tester</span> <span class="kn">import</span> <span class="n">dump_classifier_and_data</span>
+
+<span class="c1">#dump classifier, dictionary of data, and list of features into pkl files</span>
+<span class="n">dump_classifier_and_data</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">,</span> <span class="n">my_features_list</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>C:\Users\Quentin\Anaconda2\lib\site-packages\sklearn\cross_validation.py:41: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+  &quot;This module will be removed in 0.20.&quot;, DeprecationWarning)
+</pre></div>
+
+
+<h2>Validate and Evaluate</h2>
+<p><em>What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?</em></p>
+<h3>Validation</h3>
+<p>Validation is the process of splitting one's data into testing and training sets, and then applying one's algorithm or model on the testing set to gauge how effective the algorithm/model is at making predictions.  A classic mistake when it comes to validation is forgetting to split the data into testing and training sets and using the same data to train and test on.  The problem this creates, is that the algorithm will overfit the data and have high variance.  In other words, this means that the algorithm will be very good at "memorizing" how to classify the the dataset given to it, and since the training and testing dataset are the same, it will appear to perform well.  However, if the algorithm is given a new dataset it has never seen before, it will perform poorly since, it is only capable of "memorizing" what to do when given the original dataset.  In short, the overfit algorithm will be unable to generalize to new data.</p>
+<p>As mentioned previously, <em>train_test_split</em> was used as part of validation to split the data into training and testing sets.</p>
+<h3>Evaluation and Conclusion</h3>
+<p><em>Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance.</em></p>
+<p>Two of the evaluation metrics we used to asses our algorithm's performance were <strong>precision</strong> and <strong>recall</strong>.  The precision for POI's using the Random Forest Classifier was 0.20 and recall was 0.14.  What this means is that out of all the people in the dataset labelled by the algorithm as POI's, 20% of them are actually POI's.  Also, out of all the people in the dataset that were truly POI's, 14% of them were correctly labelled by the algorithm as POI's.  That said, precision and recall for Non-POI's were much higher, 0.89 and 0.92 respectively, indicating that our algorithm is better at determining when a person is not a POI than whether someone actually is one.  This is probably due to the fact that there were a relatively small number of POI's in the dataset, so the algorithm had less data to work with when learning how to determine if a person truly is a POI.</p>
+<p>If I had more time, I would like to try and improve the recall and precision for POI's, which would be difficult given the current lack of data for POI's.  Perhaps introducing text data from the email corpus could provide more information improve the performance of the POI identifier.  Using text learning could uncover possible words or phrases that appear frequently in emails written by POI's.</p>	
+
+	</article>
+
+    <p>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</p>
+
+
+		  </div>	
+		  
+		  <div class="sidebar">
+
+	        <nav>
+	          <h2>Categories</h2>
+	          <ul>
+	              <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+	          </ul>
+	        </nav>
+
+	          <aside>
+	          <h2>Social</h2>
+			    <ul class="social">
+				  <li><a href="https://www.linkedin.com/in/quentin-ikeno/">linkedin</a><i></i></li>
+				  <li><a href="https://github.com/quentinikeno">github</a><i></i></li>
+			    </ul>
+			  </aside>
+
+	          <aside>
+	            <h2>Blogroll</h2>
+	            <ul>
+	                <li><a href="http://getpelican.com/">Pelican</a></li>
+	                <li><a href="http://python.org/">Python.org</a></li>
+	                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+	            </ul>
+	          </aside>
+
+		  </div>
+
+	  </div>
+
+      <footer>
+		<p role="contentinfo">
+		  © 2013 Quentin - Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>. Theme <a href="https://github.com/fle/pelican-simplegrey">pelican-simplegrey</a>.
+    	</p>
+
+	  </footer>	
+
+	</div>
+	
+
+</body>
+</html>
