@@ -1,45 +1,110 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="english">
+
 <head>
-	<meta charset="utf-8"/>
-	<title>Identify Fraud from Enron Email - Quentin Ikeno</title>	
-	<meta name="author" content="Quentin">
-	
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-	<meta name="description" content="Using machine learning to identify perpetrators of fraud using machine learning. Done as part of Udacity's Data Analyst Nanodegree.">
+        <title>Quentin Ikeno</title>
 
 
-	<link rel="top" href="#" /><link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic|Source+Code+Pro' rel='stylesheet' type='text/css'></link>
-	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
-		
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="Python" />
+        <meta name="tags" contents="sci-kit learn" />
+        <meta name="tags" contents="Machine Learning" />
+        <meta name="tags" contents="Udacity" />
+
+
+			<meta property="og:locale" content="english">
+		<meta property="og:site_name" content="Quentin Ikeno">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/identify-fraud-from-enron-email.html">
+	<meta property="og:title" content="Identify Fraud from Enron Email">
+	<meta property="og:description" content="">
+	<meta property="og:image" content="/">
+	<meta property="article:published_time" content="2018-02-19 09:09:00-10:00">
 </head>
-	
+
 <body>
 
-    <div class="container">
-	  
-	  <header role="banner">
-	    <div class="feeds">
-	    </div>
-		<a href="" class="title">Quentin Ikeno</a>
-      </header>
-	
-	  <div class="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Quentin Ikeno</a>
+            </div>
 
-		  <div role="main" class="content">
-	<article class="full">
-			
-		<h1>Identify Fraud from Enron Email</h1>
-		
-<div class="metadata">
-  <time datetime="2018-02-19T09:09:00-10:00" pubdate>Mon 19 February 2018</time>
-    <address class="vcard author">
-      by <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
-    </address>
-  in <a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a>
-<p class="tags">tagged <a href="/tag/python.html">Python</a>, <a href="/tag/sci-kit-learn.html">sci-kit learn</a>, <a href="/tag/machine-learning.html">Machine Learning</a>, <a href="/tag/udacity.html">Udacity</a></p></div>		
-		<h2>Understanding the Dataset</h2>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/post-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Identify Fraud from Enron Email</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/quentin-ikeno.html">Quentin Ikeno</a>
+                             on Mon 19 February 2018
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>Understanding the Dataset</h2>
 <p><em>Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?</em></p>
 <blockquote>
 <p>In 2000, Enron was one of the largest companies in the United States. By 2002, it had collapsed into bankruptcy due to widespread corporate fraud. In the resulting Federal investigation, a significant amount of typically confidential information entered into the public record, including tens of thousands of emails and detailed financial data for top executives.</p>
@@ -476,57 +541,64 @@ Best Parameters: {&#39;max_features&#39;: &#39;auto&#39;, &#39;min_samples_split
 <h3>Evaluation and Conclusion</h3>
 <p><em>Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance.</em></p>
 <p>Two of the evaluation metrics we used to asses our algorithm's performance were <strong>precision</strong> and <strong>recall</strong>.  The precision for POI's using the Random Forest Classifier was 0.20 and recall was 0.14.  What this means is that out of all the people in the dataset labelled by the algorithm as POI's, 20% of them are actually POI's.  Also, out of all the people in the dataset that were truly POI's, 14% of them were correctly labelled by the algorithm as POI's.  That said, precision and recall for Non-POI's were much higher, 0.89 and 0.92 respectively, indicating that our algorithm is better at determining when a person is not a POI than whether someone actually is one.  This is probably due to the fact that there were a relatively small number of POI's in the dataset, so the algorithm had less data to work with when learning how to determine if a person truly is a POI.</p>
-<p>If I had more time, I would like to try and improve the recall and precision for POI's, which would be difficult given the current lack of data for POI's.  Perhaps introducing text data from the email corpus could provide more information improve the performance of the POI identifier.  Using text learning could uncover possible words or phrases that appear frequently in emails written by POI's.</p>	
+<p>If I had more time, I would like to try and improve the recall and precision for POI's, which would be difficult given the current lack of data for POI's.  Perhaps introducing text data from the email corpus could provide more information improve the performance of the POI identifier.  Using text learning could uncover possible words or phrases that appear frequently in emails written by POI's.</p>
+    </article>
 
-	</article>
+    <hr>
 
-    <p>
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	</p>
+            </div>
+        </div>
+    </div>
 
+    <hr>
 
-		  </div>	
-		  
-		  <div class="sidebar">
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Blog powered by <a href="http://getpelican.com">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-	        <nav>
-	          <h2>Categories</h2>
-	          <ul>
-	              <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
-	          </ul>
-	        </nav>
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
 
-	          <aside>
-	          <h2>Social</h2>
-			    <ul class="social">
-				  <li><a href="https://www.linkedin.com/in/quentin-ikeno/">linkedin</a><i></i></li>
-				  <li><a href="https://github.com/quentinikeno">github</a><i></i></li>
-			    </ul>
-			  </aside>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
 
-	          <aside>
-	            <h2>Blogroll</h2>
-	            <ul>
-	                <li><a href="http://getpelican.com/">Pelican</a></li>
-	                <li><a href="http://python.org/">Python.org</a></li>
-	                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-	            </ul>
-	          </aside>
-
-		  </div>
-
-	  </div>
-
-      <footer>
-		<p role="contentinfo">
-		  © 2013 Quentin - Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>. Theme <a href="https://github.com/fle/pelican-simplegrey">pelican-simplegrey</a>.
-    	</p>
-
-	  </footer>	
-
-	</div>
-	
+    <!-- Custom Theme JavaScript -->
+    <script src="/theme/js/clean-blog.min.js"></script>
 
 </body>
+
 </html>
