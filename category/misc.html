@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <title>Quentin Ikeno - misc</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Quentin Ikeno </a></h1>
+                <nav><ul>
+                    <li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/exploration-of-tsa-claims-data.html">"Exploration of TSA Claims Data"</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2018-02-19T00:00:00-10:00">
+                Published: Mon 19 February 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/quentin-ikeno.html">"Quentin Ikeno"</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info --><h1>Exploration of TSA Claims Data</h1>
+<div class="highlight"><pre><span></span>## Error in setwd(&quot;~/Udacity/eda/Project&quot;): cannot change working directory
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(ggplot2): there is no package called &#39;ggplot2&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(lubridate): there is no package called &#39;lubridate&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(gridExtra): there is no package called &#39;gridExtra&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(dplyr): there is no package called &#39;dplyr&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(ggmap): there is no package called &#39;ggmap&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(GGally): there is no package called &#39;GGally&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(scales): there is no package called &#39;scales&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(memisc): there is no package called &#39;memisc&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in library(waffle): there is no package called &#39;waffle&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in file(file, &quot;rt&quot;): cannot open the connection
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in file(file, &quot;rt&quot;): cannot open the connection
+</pre></div>
+
+
+<hr>
+<p>title: "Exporation of TSA Claims"
+author: Quentin Ikeno
+date: [September] [23], [2017]
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true</p>
+<hr>
+<h1>Introduction</h1>
+<p>The Transportation Security Administration (TSA) is an agency of the U.S. 
+Department of Homeland Security, responsible for the public saftey of travelers
+in the United States.</p>
+<p>Here we will be exploring claims data against the TSA from 2002 to 2015.</p>
+<h1>Univariate Plots Section</h1>
+<div class="highlight"><pre><span></span>## Error in str(tsa): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>This dataframe contains 204,267 obvservations of 13 variables.</p>
+<div class="highlight"><pre><span></span>## Error in as.Date(tsa$Date.Received, format = &quot;%d-%b-%y&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$date.received.format, format = &quot;%Y&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$date.received.format, format = &quot;%m&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$date.received.format, format = &quot;%d&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in ymd_hms(tsa$Incident.Date): could not find function &quot;ymd_hms&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in as.Date(tsa$Incident.Date, format = (&quot;%m/%d/%Y %H:%M&quot;)): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in as.Date(tsa$Incident.Date, format = (&quot;%d-%b-%y&quot;)): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;a&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;b&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$incident.date.format, format = &quot;%Y&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$incident.date.format, format = &quot;%m&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in format(tsa$incident.date.format, format = &quot;%d&quot;): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in gsub(&quot;[^0-9\\.]&quot;, &quot;&quot;, tsa$Claim.Amount): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in gsub(&quot;[^0-9\\.]&quot;, &quot;&quot;, tsa$Close.Amount): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>There some columns in the dataframe with missing data.  For example, there are 
+68,952 missing values for close amount.  I made a quick look through the data 
+and it appears that the TSA stopped recording the close amount in the claims 
+data, starting from 2010.  </p>
+<div class="highlight"><pre><span></span>## Error in qplot(data = subset(tsa, !is.na(date.received.year)), date.received.year, : could not find function &quot;qplot&quot;
+</pre></div>
+
+
+<p>Two things about this graph caught my eye.  First, there is a relatively low 
+amount of claims for 2002, with a large jump in claims after 2002.  What could 
+have possibly caused this?  </p>
+<p>One explanation could be that in 2002 claims were lower because the TSA did not 
+handle the screening of passengers and baggage at every airport in America 
+(screenings at airports before 2002 were handled by private security firms).<br>
+However, that changed when the TSA was required to screen all passengers at U.S. commercial aiports by November 19, 2002 and to screen all checked baggage by 
+December 31, 2002.  Subsequently, claims went up in 2003 after the policy 
+changes took effect.</p>
+<p>Another possibility is that claims were low because there fewer people flying
+since air travel in the United States was down in the aftermath of September
+11, 2001.</p>
+<p>The other thing I noticed was that the number of claims appears to decrease 
+after 2004 and level off around 2010.</p>
+<div class="highlight"><pre><span></span>## Error in qplot(data = subset(tsa, !is.na(date.received.year)), date.received.month, : could not find function &quot;qplot&quot;
+</pre></div>
+
+
+<p>From this plot we can see that the number of claims started increasing around 
+late 2002, peaking in 2003, then start to decrease around 2004.  There doesn't
+appear to any particular month or travel season when claims increase.</p>
+<div class="highlight"><pre><span></span>## Error in table(tsa$Airport.Name): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>Here is a table of the top five airports where the most claims were made.  The
+results aren't too surprising considering these are also some of the busiest 
+airports in the U.S.  According to ABC news, each of these airports are in the 
+top 20 of airports where TSA employees were fired for theft.</p>
+<p>Below is a map of the U.S. where TSA claims were filed, where the bubble size
+represents the number of claims.</p>
+<div class="highlight"><pre><span></span>## Error in inner_join(tsa, long_lat, by = c(Airport.Code = &quot;airport.code&quot;)): could not find function &quot;inner_join&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in tsa2 %&gt;% group_by(Airport.Code, latitude, longitude) %&gt;% summarize(n = n()) %&gt;% : could not find function &quot;%&gt;%&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in get_map(location = &quot;united states&quot;, zoom = 4, maptype = &quot;terrain&quot;, : could not find function &quot;get_map&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in ggmap(map): could not find function &quot;ggmap&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in table(tsa$Item): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>Here are the five most common items claims were filed for.  At first I did not 
+expect digital cameras to be on this list but then I remembered this data goes
+back to 2002.</p>
+<div class="highlight"><pre><span></span>## Error in qplot(data = subset(tsa, !is.na(Claim.Type) &amp; Claim.Type != &quot;&quot; &amp; : could not find function &quot;qplot&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in table(tsa$Claim.Type): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>I was not very surprised that passenger property loss was the most common 
+complaint.  However, I did not expect to see there were four wrongful death
+complaints as well as three compliments.</p>
+<div class="highlight"><pre><span></span>## Error in tsa %&gt;% group_by(Disposition) %&gt;% summarize(n = n()) %&gt;% arrange(desc(n)): could not find function &quot;%&gt;%&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;tsa.disposition&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in loadNamespace(name): there is no package called &#39;scales&#39;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;val_names&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in waffle(vals, title = &quot;TSA Claims Disposition&quot;): could not find function &quot;waffle&quot;
+</pre></div>
+
+
+<p>Looking at the disposition for all claims, there are 26499 missing dispositions 
+(about 13% of the data). If we take out the missing data, it turns out over half
+of all claims are denied, while the rest are settled or approved.</p>
+<div class="highlight"><pre><span></span>## Error in qplot(data = tsa, Claim.Amount, binwidth = 50, geom = &quot;histogram&quot;, : could not find function &quot;qplot&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in summary(tsa$Claim.Amount): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>Here is a histogram of claim amounts.  The data appears skewed left where 
+relatively small claims seems to be more common than larger claims.  The median
+claim amount is $105 while the mean is $1,003, meaning that there must be some 
+very large claims that are affecting the mean.  Sure enough, we can see that the
+max amount is $27,220,000.</p>
+<h1>Univariate Analysis</h1>
+<h3>What is the structure of your dataset?</h3>
+<p>This dataset contains 204,267 different claims with 13 features for each claim:</p>
+<p>Claim Number</p>
+<p>Date Received</p>
+<p>Incident Date</p>
+<p>Airport Code</p>
+<p>Airport Name</p>
+<p>Airline Name</p>
+<p>Claim Type</p>
+<p>Claim Site</p>
+<p>Item</p>
+<p>Claim Amount</p>
+<p>Status</p>
+<p>Close Amount</p>
+<p>Disposition</p>
+<p>Some of these, such as Close Amount and Claim Type contain missing data.</p>
+<h3>What is/are the main feature(s) of interest in your dataset?</h3>
+<p>The main features of interest in the dataset are date received, claim type,
+claim amount, status, and close amount.</p>
+<h3>What other features in the dataset do you think will help support your \</h3>
+<p>investigation into your feature(s) of interest?</p>
+<p>I am interested if there is any relation between an airline and claim type.</p>
+<h3>Did you create any new variables from existing variables in the dataset?</h3>
+<p>I created three new variables by separating each date received entry by year, 
+month, and day.</p>
+<p>I also found another dataset that contained the longitude and latitude for 
+airports listed by their IATA airport code.  I then joined data from that 
+dataset and combined it with the data from the TSA dataset to plot the location
+of each airport on the bubble map of TSA claims locations.</p>
+<h3>Of the features you investigated, were there any unusual distributions? \</h3>
+<p>Did you perform any operations on the data to tidy, adjust, or change the form \
+of the data? If so, why did you do this?</p>
+<p>There were some date received entries that had dates before 2002 and past 2015.
+I fixed this by changing the date received year to be the same year as the 
+incident date year.</p>
+<p>In addition, I removed the semicolon and dollar sign from the strings for the 
+claim amount and close amount and then converted it to numeric data.</p>
+<p>I also changed all the incident dates and received dates, which were in mutiple
+formats, to a single date format.</p>
+<h1>Bivariate Plots Section</h1>
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = date.received.year, y = Claim.Amount, group = date.received.year), : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>It appears that the median claim amount seems to decrease after 2009.  This could be related to the fact that the number of claims decreased after 2010 compared to previous years.  In October 2009, the TSA announced that it would purchase new or upgrade existing closed circuit television systems at aipports accros the country, which could be an explain the drop in claims and the drop in median claim amounts.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = Disposition, y = Claim.Amount), data = subset(tsa, : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = Disposition, y = Claim.Amount), data = subset(tsa, : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>These boxplots had many outliers making the plots difficult to see, which is why
+I decided to take away some of the outliers by limiting the y-axis.  We can see
+from the first plot that the TSA did not approve in full any claims above $1600. Furthermore, it is seems that the TSA attempted to settle or deny the most 
+expensive of claims rather than approving them.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = Claim.Amount, y = Close.Amount), data = subset(tsa, : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in cor.test(tsa$Claim.Amount, tsa$Close.Amount): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<p>With this next plot, I was interested to see how the amount people claimed
+compared to the amount they eventually received.  I included a red line to 
+indicate where the amount claimed is equal to the close amount.</p>
+<p>For very high claim amounts, very few claims recieved the full amount they asked
+for.</p>
+<p>One thing that caught my eye is that there were a few claims of $0 or near
+$0 that had close amounts higher than their claim amounts.  If I had to guess
+as to why this was the case, I would say that these are probably errors in the
+data.</p>
+<div class="highlight"><pre><span></span>## Error in subset(tsa, Airline.Name != &quot;&quot; &amp; tsa$Claim.Site == &quot;Checked Baggage&quot;) %&gt;% : could not find function &quot;%&gt;%&quot;
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in tsa %&gt;% filter(Airline.Name %in% tsa3$Airline.Name) %&gt;% mutate(Airline.Name = factor(Airline.Name, : could not find function &quot;%&gt;%&quot;
+</pre></div>
+
+
+<p>Here are the top eight airlines listed in the claims.  There doesn't seem to be 
+anything interesting here, since the proportions of each claim type for each 
+claim type appear pretty similar across the airlines.  Also, the top airlines 
+with the most claims are also some of the airlines that fly the most amount of passengers.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(data = subset(tsa, !is.na(Claim.Type) &amp; Claim.Type != : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>Nothing too surprising with this plot as Passenger Property Loss and Property 
+Damage seem to be the most common complaint across all years.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(data = subset(tsa, !is.na(Claim.Site) &amp; Claim.Site != : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>The two most frequent claim sites listed for each year are checked baggage, and
+checkpoint.</p>
+<p>Counts for claims with the claim site listed as checked baggage appear to 
+decrease after 2004 while counts for claims with claim site listed as checkpoint
+do not change quite as much.  It is not obvious as to why this is.  It could be
+that the TSA has improved its measures to prevent agents from damaging or 
+stealing items from luggage, or perhaps passengers over time start to be more 
+careful and pack items they do not want stolen in their carry-on luggage, or 
+passengers are simply checking in less baggage because of airlines charging 
+baggage fees.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(data = subset(tsa, !is.na(Disposition) &amp; Disposition != : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>The proportion of claims denied appears to increase around 2006 or 2007.</p>
+<h1>Bivariate Analysis</h1>
+<h3>Did you observe any interesting relationships between the other features \</h3>
+<p>(not the main feature(s) of interest)?</p>
+<p>Unfortunately, my analysis of airline and claim type did not yield any 
+unexpected results.</p>
+<h3>What was the strongest relationship you found?</h3>
+<p>The only two continuous variables I compared were claim amount and close amount.
+They do not have a very strong relationship, as their correlation coefficient is
+essentially zero.</p>
+<h1>Multivariate Plots Section</h1>
+<div class="highlight"><pre><span></span>## Error in eval(expr, envir, enclos): object &#39;tsa&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in qplot(Claim.Type, date.received.format - incident.date.format, : could not find function &quot;qplot&quot;
+</pre></div>
+
+
+<p>These box and whisker plots compare the number of days between the incident date
+and the date the claim was received for across each type of claim.  The median 
+difference in time appears fairly similar across all different claim types, 
+except for possibly the compliment claim type, though since there were only four 
+claims with compliments in the data, this may not be a very good indicator of
+what the actual median should be.</p>
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = date.received.month, y = Close.Amount/Claim.Amount), : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<p>Here we have the average of the close amount divided by the claim amount for
+each month from 2002 to 2009.  The ratio appears to be somewhat sporadic during
+2002, most likely because there were relatively few claims during 2002.  </p>
+<p>The ratio decreases over time until levelling off in 2008.</p>
+<h1>Multivariate Analysis</h1>
+<h3>Talk about some of the relationships you observed in this part of the \</h3>
+<p>investigation. Were there features that strengthened each other in terms of \
+looking at your feature(s) of interest?</p>
+<p>Looking at claim amount divided by close amount over time seemed to be an 
+important relationship as this ratio seemed to decrease with time.</p>
+<h3>Were there any interesting or surprising interactions between features?</h3>
+<p>It was interesting for me to see how the average claim amount over close amount
+decreased over time since it shows that less money is being given out compared
+to the amount being asked asked for as the years go by.</p>
+<hr>
+<h1>Final Plots and Summary</h1>
+<h3>Plot One</h3>
+<div class="highlight"><pre><span></span>## Error in ggmap(map): could not find function &quot;ggmap&quot;
+</pre></div>
+
+
+<h3>Description One</h3>
+<p>The airports with the most claims are tend to be heavily trafficked airports in
+large cities such as JFK International Airport in New York or LAX in Los 
+Angeles.</p>
+<h3>Plot Two</h3>
+<div class="highlight"><pre><span></span>## Error in ggplot(data = subset(tsa, !is.na(Claim.Type) &amp; Claim.Type != : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<h3>Description Two</h3>
+<p>The number of claims peak in 2004 and decrease in subsequent years.  The most 
+common form of claims for all years are passenger property loss and property
+damage.</p>
+<h3>Plot Three</h3>
+<div class="highlight"><pre><span></span>## Error in ggplot(aes(x = date.received.month, y = Close.Amount/Claim.Amount), : could not find function &quot;ggplot&quot;
+</pre></div>
+
+
+<h3>Description Three</h3>
+<p>The average ratio appears to fluctuate a lot in 2002, which is probably because
+of the relatively few amount of claims during that year.  However after 2002,
+changes become more gradual and over time the average claim amount/close
+amount decreases and until it levels off in 2008.</p>
+<hr>
+<h1>Reflection</h1>
+<h3>Issues</h3>
+<p>While working on this project I encountered issues using this dataset.  The most significant problem is that there were missing data.  For instance, there 
+were no data for close amount after 2009, which was six years of missing data.<br>
+Another issue was that dates were given in two different formats that needed to
+be converted to a single format, which I was able to do with assistance from 
+an instructor on Live Help.  Finally, data for items listed in the claims needed
+to be cleaned.  Given more time, I would have liked to have explored the 
+different items given and their relationships to the other variables.</p>
+<p>One limitation of this dataset is that we do not have any data on the total 
+number of travellers who pass through TSA screening.  For a more complete 
+investigation, I would have liked to have seen how the number of claims compare 
+to the overall count of people who are screened by the TSA over time.</p>
+<p>Another limitation is that we cannot assess the validity of all of the claims.
+It is possible that some of these claims could be fraudulent.  Furthermore, some
+items stolen from passenger luggage could have been stolen by airline employees
+or airport baggage handlers and the TSA was mistakenly blamed.</p>
+<h3>Conclusion</h3>
+<p>After doing this exploratory data analysis I think air travellers will have some
+mixed feelings about the results.  On one hand, I think most will be pleased to 
+know that TSA claims have been decreasing since 2004, which is a sign that the 
+agency may be improving its measures to prevent damage and theft of passengers' personal belongings.  On the other hand, for those who are victims of theft, the fact that over 50% of all claims between 2002 and 2015 were denied may not be a satisfying outcome.</p>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://www.linkedin.com/feed/">LinkedIn</a></li>
+                            <li><a href="https://github.com/quentinikeno">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
