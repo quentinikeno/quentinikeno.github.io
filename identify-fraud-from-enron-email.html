@@ -1,41 +1,121 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="english"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="english">
-<head>
-          <title>Quentin Ikeno</title>
-        <meta charset="utf-8" />
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="Quentin">
 
 
-    <meta name="tags" content="Python" />
-    <meta name="tags" content="sci-kit learn" />
-    <meta name="tags" content="Machine Learning" />
-    <meta name="tags" content="Udacity" />
+        <title>Quentin Ikeno - Identify Fraud from Enron Email</title>
 
-</head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Quentin Ikeno <strong></strong></a></h1>
-        </header><!-- /#banner -->
-        <nav id="menu"><ul>
-            <li><a href="/pages/about-me.html">About Me</a></li>
-        </ul></nav><!-- /#menu -->
-<section id="content" class="body">
-  <header>
-    <h2 class="entry-title">
-      <a href="/identify-fraud-from-enron-email.html" rel="bookmark"
-         title="Permalink to Identify Fraud from Enron Email">Identify Fraud from Enron Email</a></h2>
- 
-  </header>
-  <footer class="post-info">
-    <time class="published" datetime="2018-02-19T09:09:00-10:00">
-      Mon 19 February 2018
-    </time>
-    <address class="vcard author">
-      By           <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
-    </address>
-  </footer><!-- /.post-info -->
-  <div class="entry-content">
-    <h2>Understanding the Dataset</h2>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/navy.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/solarized.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="Python" />
+        <meta name="tags" contents="sci-kit learn" />
+        <meta name="tags" contents="Machine Learning" />
+        <meta name="tags" contents="Udacity" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Quentin Ikeno">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/identify-fraud-from-enron-email.html">
+	<meta property="og:title" content="Identify Fraud from Enron Email">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2018-02-19 09:09:00-10:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Quentin Ikeno</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+							        <li><a href="/pages/about-me.html">About Me</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+<li>Identify Fraud from Enron Email</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/identify-fraud-from-enron-email.html">Identify Fraud from Enron Email</a></h2>
+			<ul>
+				<li>By <a href="/author/quentin-ikeno.html">Quentin Ikeno</a></li>
+				<li>Mon 19 February 2018</li>
+			</ul>
+		</header>
+
+		<h2>Understanding the Dataset</h2>
 <p><em>Summarize for us the goal of this project and how machine learning is useful in trying to accomplish it. As part of your answer, give some background on the dataset and how it can be used to answer the project question. Were there any outliers in the data when you got it, and how did you handle those?</em></p>
 <blockquote>
 <p>In 2000, Enron was one of the largest companies in the United States. By 2002, it had collapsed into bankruptcy due to widespread corporate fraud. In the resulting Federal investigation, a significant amount of typically confidential information entered into the public record, including tens of thousands of emails and detailed financial data for top executives.</p>
@@ -473,13 +553,65 @@ Best Parameters: {&#39;max_features&#39;: &#39;auto&#39;, &#39;min_samples_split
 <p><em>Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance.</em></p>
 <p>Two of the evaluation metrics we used to asses our algorithm's performance were <strong>precision</strong> and <strong>recall</strong>.  The precision for POI's using the Random Forest Classifier was 0.20 and recall was 0.14.  What this means is that out of all the people in the dataset labelled by the algorithm as POI's, 20% of them are actually POI's.  Also, out of all the people in the dataset that were truly POI's, 14% of them were correctly labelled by the algorithm as POI's.  That said, precision and recall for Non-POI's were much higher, 0.89 and 0.92 respectively, indicating that our algorithm is better at determining when a person is not a POI than whether someone actually is one.  This is probably due to the fact that there were a relatively small number of POI's in the dataset, so the algorithm had less data to work with when learning how to determine if a person truly is a POI.</p>
 <p>If I had more time, I would like to try and improve the recall and precision for POI's, which would be difficult given the current lack of data for POI's.  Perhaps introducing text data from the email corpus could provide more information improve the performance of the POI identifier.  Using text learning could uncover possible words or phrases that appear frequently in emails written by POI's.</p>
-  </div><!-- /.entry-content -->
-</section>
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
-                which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-        </footer><!-- /#contentinfo -->
-</body>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/python.html">Python</a><a href="/tag/sci-kit-learn.html">sci-kit learn</a><a href="/tag/machine-learning.html">Machine Learning</a><a href="/tag/udacity.html">Udacity</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget no-mg-top">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="https://www.linkedin.com/in/quentin-ikeno/" class="tooltip top" title="linkedin">
+										<i class="icon-linkedin"></i>
+									</a>
+								</li>
+								<li>
+									<a href="https://github.com/quentinikeno" class="tooltip top" title="github">
+										<i class="icon-github"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
 </html>

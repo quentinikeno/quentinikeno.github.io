@@ -1,41 +1,121 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="english"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="english">
-<head>
-          <title>Quentin Ikeno</title>
-        <meta charset="utf-8" />
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="Quentin">
 
 
-    <meta name="tags" content="R" />
-    <meta name="tags" content="Data Cleaning" />
-    <meta name="tags" content="Data Analysis" />
-    <meta name="tags" content="Udacity" />
+        <title>Quentin Ikeno - Exploration of TSA Claims Data</title>
 
-</head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Quentin Ikeno <strong></strong></a></h1>
-        </header><!-- /#banner -->
-        <nav id="menu"><ul>
-            <li><a href="/pages/about-me.html">About Me</a></li>
-        </ul></nav><!-- /#menu -->
-<section id="content" class="body">
-  <header>
-    <h2 class="entry-title">
-      <a href="/exploration-of-tsa-claims-data.html" rel="bookmark"
-         title="Permalink to Exploration of TSA Claims Data">Exploration of TSA Claims Data</a></h2>
- 
-  </header>
-  <footer class="post-info">
-    <time class="published" datetime="2018-02-19T06:48:00-10:00">
-      Mon 19 February 2018
-    </time>
-    <address class="vcard author">
-      By           <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
-    </address>
-  </footer><!-- /.post-info -->
-  <div class="entry-content">
-    <h1>Introduction</h1>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/navy.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/solarized.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="R" />
+        <meta name="tags" contents="Data Cleaning" />
+        <meta name="tags" contents="Data Analysis" />
+        <meta name="tags" contents="Udacity" />
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Quentin Ikeno">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/exploration-of-tsa-claims-data.html">
+	<meta property="og:title" content="Exploration of TSA Claims Data">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2018-02-19 06:48:00-10:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Quentin Ikeno</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+							        <li><a href="/pages/about-me.html">About Me</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+<li>Exploration of TSA Claims Data</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/exploration-of-tsa-claims-data.html">Exploration of TSA Claims Data</a></h2>
+			<ul>
+				<li>By <a href="/author/quentin-ikeno.html">Quentin Ikeno</a></li>
+				<li>Mon 19 February 2018</li>
+			</ul>
+		</header>
+
+		<h1>Introduction</h1>
 <p>The Transportation Security Administration (TSA) is an agency of the U.S. 
 Department of Homeland Security, responsible for the public saftey of travelers
 in the United States.</p>
@@ -326,13 +406,65 @@ or airport baggage handlers and the TSA was mistakenly blamed.</p>
 mixed feelings about the results.  On one hand, I think most will be pleased to 
 know that TSA claims have been decreasing since 2004, which is a sign that the 
 agency may be improving its measures to prevent damage and theft of passengers' personal belongings.  On the other hand, for those who are victims of theft, the fact that over 50% of all claims between 2002 and 2015 were denied may not be a satisfying outcome.</p>
-  </div><!-- /.entry-content -->
-</section>
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
-                which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-        </footer><!-- /#contentinfo -->
-</body>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/r.html">R</a><a href="/tag/data-cleaning.html">Data Cleaning</a><a href="/tag/data-analysis.html">Data Analysis</a><a href="/tag/udacity.html">Udacity</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget no-mg-top">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="https://www.linkedin.com/in/quentin-ikeno/" class="tooltip top" title="linkedin">
+										<i class="icon-linkedin"></i>
+									</a>
+								</li>
+								<li>
+									<a href="https://github.com/quentinikeno" class="tooltip top" title="github">
+										<i class="icon-github"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
 </html>
