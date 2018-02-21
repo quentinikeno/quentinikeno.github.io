@@ -174,15 +174,17 @@
 <p>I found that there were no problems with how the zip codes were formatted, however, three zip codes were erroneous.  One of the zip codes was is a zip code used on the island of Moloka’i, the other is a zip code that is an Alaskan zip code, and the last was given as “HI.” </p>
 <p>The after looking up the true zip codes for each of the three locations with inconsistent codes, I created the “update_zip” function to correct them.</p>
 <h3>Phone Numbers</h3>
-<p>There were 15 different formats for how phone numbers were formatted.  Here are some examples:
-<em> (808) XXX – XXXX
-</em> (808) – XXX – XXXX
-<em> +1 808 XXX XXXX
-</em> +1 808 XXX – XXXX
-<em> +1 (808) XXXXXXX
-</em> +1 – 808 – XXX – XXXX
-* XXXXXXX
-The “update_phones” function converts all phone numbers to the format          <br>
+<p>There were 15 different formats for how phone numbers were formatted.  Here are some examples:</p>
+<ul>
+<li>(808) XXX – XXXX</li>
+<li>(808) – XXX – XXXX</li>
+<li>+1 808 XXX XXXX</li>
+<li>+1 808 XXX – XXXX</li>
+<li>+1 (808) XXXXXXX</li>
+<li>+1 – 808 – XXX – XXXX</li>
+<li>XXXXXXX</li>
+</ul>
+<p>The “update_phones” function converts all phone numbers to the format          <br>
 (808) – XXX – XXXX.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
@@ -1021,22 +1023,6 @@ Number of Ways:  26775
 			</nav>
 		</div>
 		
-		<!-- Tags -->
-		<div class="widget">
-			<h3 class="headline">Tags</h3><span class="line"></span><div class="clearfix"></div>
-			<nav class="tags">				    <a href="/tag/data-analysis.html">Data Analysis</a>
-				    <a href="/tag/data-cleaning.html">Data Cleaning</a>
-				    <a href="/tag/hypothesis-testing.html">Hypothesis Testing</a>
-				    <a href="/tag/machine-learning.html">Machine Learning</a>
-				    <a href="/tag/python.html">Python</a>
-				    <a href="/tag/r.html">R</a>
-				    <a href="/tag/sci-kit-learn.html">sci-kit learn</a>
-				    <a href="/tag/sql.html">SQL</a>
-				    <a href="/tag/statistics.html">Statistics</a>
-				    <a href="/tag/tableau.html">Tableau</a>
-				    <a href="/tag/udacity.html">Udacity</a>
-			</nav>
-		</div>
 	</div>
 			</div>
 			<!-- Container / End -->
