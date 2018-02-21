@@ -37,6 +37,16 @@
         <meta name="tags" contents="Statistics" />
         <meta name="tags" contents="Hypothesis Testing" />
         <meta name="tags" contents="Udacity" />
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Test a Perceptual Phenomenon">
+    <meta property="og:url" content="test-a-perceptual-phenomenon.html">
+    <meta property="og:description" content="Performing statistical tests using R on data for particpants made to perform the Stroop Task. Done as part of the Udacity Data Analyst Nanodegree.">
+    <meta property="article:published_time" content="Monday, February 19, 2018">
+    <meta name="twitter:title" content="Test a Perceptual Phenomenon">
+    <meta name="twitter:description" content="Performing statistical tests using R on data for particpants made to perform the Stroop Task. Done as part of the Udacity Data Analyst Nanodegree.">
+    <meta name="description" content="Performing statistical tests using R on data for particpants made to perform the Stroop Task. Done as part of the Udacity Data Analyst Nanodegree.">
+    <meta name="twitter:image" content="">
+    <meta property="og:image" content="">
 
 	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Quentin Ikeno">
@@ -101,10 +111,6 @@
 	<div class="twelve alt columns">
 <article class="post" style="margin: 0; border: 0;">
 
-	<div class="post-format">
-		<div class="circle"><i class="icon-pencil"></i><span></span></div>
-	</div>
-
 	<section class="post-content">
 
 		<header class="meta">
@@ -122,11 +128,11 @@ variable is the time taken for participants to go through the list for each
 condition.</p>
 <h3>What is an appropriate set of hypotheses for this task?  What kind of statistical test do you expect to perform?  Justify your choices.</h3>
 <p>The set of hypotheses for this test will be:</p>
-<p>$H_{0}$: $\mu_{I}$ - $\mu_{C}$ $=$ 0</p>
+<p><span class="math">\(H_{0}\)</span>: <span class="math">\(\mu_{I}\)</span> - <span class="math">\(\mu_{C}\)</span> <span class="math">\(=\)</span> 0</p>
 <p>(There is no significant difference between the population mean completion time
-for the incongruent words condition ($\mu_{I}$) and the population mean
-completion time for the congruent words condition ($\mu_{C}$)).</p>
-<p>$H_{A}$: $\mu_{I}$ - $\mu_{C}$ $&gt;$ 0</p>
+for the incongruent words condition (<span class="math">\(\mu_{I}\)</span>) and the population mean
+completion time for the congruent words condition (<span class="math">\(\mu_{C}\)</span>)).</p>
+<p><span class="math">\(H_{A}\)</span>: <span class="math">\(\mu_{I}\)</span> - <span class="math">\(\mu_{C}\)</span> <span class="math">\(&gt;\)</span> 0</p>
 <p>(The difference between the population mean completion time for the incongruent
 words condition and the population mean completion time for the congruent words
 condition is greater than zero).</p>
@@ -198,13 +204,13 @@ participants which may affect the normality of the data.</p>
 <p>If we look at normal probability plot for the congruent data, the points appears
 to fall a relatively straight line and is thus most likely normally distributed.
 If we perform an Anderson-Darling test of normality on the data, where 
-$\alpha$ = 0.05, we can see that the p-value for the test is 0.8432.  Since the 
+<span class="math">\(\alpha\)</span> = 0.05, we can see that the p-value for the test is 0.8432.  Since the 
 p-value is above 0.05, there is not enough evidence to conclude that the data 
 is not normally distributed.</p>
 <p>However, If we look at the probability plot for the incongruent data, two points
 on the right do not fall on the with the rest of the data, which suggests the 
 data may not be normally distributed.  Performing an Anderson-Darling test, with
-$\alpha$ = 0.05, the p-value is 0.0067, which is less than 0.05, therefore there
+<span class="math">\(\alpha\)</span> = 0.05, the p-value is 0.0067, which is less than 0.05, therefore there
 is evidence that this data is not normally distributed.  This poses a problem
 for our paired t-test, since a requirement of performing the test is that the 
 data we use is normally distributed or if it is not normally distributed, we are
@@ -213,7 +219,7 @@ this means that we cannot perform the t-test and should perform some other kind
 of test.  That being said, for the sake of completing this project I will go 
 ahead and perform the paired t-test.</p>
 <h3>Now, perform the statistical test and report your results.  What is your confidence level and your critical statistic value?  Do you reject the null hypothesis or fail to reject it?  Come to a conclusion in terms of the experiment task.  Did the results match up with your expectations?</h3>
-<p>The confidence level I decided to use an $\alpha$ = 0.05 meaning our confidence
+<p>The confidence level I decided to use an <span class="math">\(\alpha\)</span> = 0.05 meaning our confidence
 level will be 0.95.  The test statistic I came up with is 8.0207.  Using a 
 t-table, the critical statistic value, with 23 degrees of freedom, is 1.7139.<br>
 So, since the test statistic (8.0207) is greater than the critical value 
@@ -228,6 +234,61 @@ longer to complete the incongruent condition when performing the Stroop task.</p
 <p>https://www.r-bloggers.com/normality-tests-for-continuous-data/</p>
 <p>http://ggplot2.tidyverse.org/reference/geom_qq.html</p>
 <p>http://www.statisticshowto.com/when-to-use-a-t-score-vs-z-score/</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 		    <div class="tags">
 		        <p>tags: <a href="/tag/r.html">R</a><a href="/tag/statistics.html">Statistics</a><a href="/tag/hypothesis-testing.html">Hypothesis Testing</a><a href="/tag/udacity.html">Udacity</a></p>
 		    </div>
