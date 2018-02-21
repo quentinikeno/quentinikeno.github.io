@@ -1,45 +1,111 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-	<meta charset="utf-8"/>
-	<title>Investigate the Titanic Dataset - Quentin Ikeno</title>	
-	<meta name="author" content="Quentin">
-	
+    <title>Investigate the Titanic Dataset - Quentin Ikeno</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<meta name="description" content="Using Pandas in Python to analyze data and see who survived the sinking of the Titanic. Done as part of the Udacity Data Analyst Nanodegree.">
 
 
-	<link rel="top" href="#" /><link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic|Source+Code+Pro' rel='stylesheet' type='text/css'></link>
-	<link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
-		
+<link rel="canonical" href="/investigate-the-titanic-dataset.html">
+
+        <meta name="author" content="Quentin Ikeno" />
+        <meta name="keywords" content="Python,Data Analysis,Udacity" />
+        <meta name="description" content="Using Pandas in Python to analyze data and see who survived the sinking of the Titanic. Done as part of the Udacity Data Analyst Nanodegree." />
+
+        <meta property="og:site_name" content="Quentin Ikeno" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Investigate the Titanic Dataset"/>
+        <meta property="og:url" content="/investigate-the-titanic-dataset.html"/>
+        <meta property="og:description" content="Using Pandas in Python to analyze data and see who survived the sinking of the Titanic. Done as part of the Udacity Data Analyst Nanodegree."/>
+        <meta property="article:published_time" content="2018-02-18" />
+            <meta property="article:section" content="Data Analyst Nanodegree" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:tag" content="Data Analysis" />
+            <meta property="article:tag" content="Udacity" />
+            <meta property="article:author" content="Quentin Ikeno" />
+
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
 
 </head>
-	
 <body>
 
-    <div class="container">
-	  
-	  <header role="banner">
-	    <div class="feeds">
-	    </div>
-		<a href="" class="title">Quentin Ikeno</a>
-      </header>
-	
-	  <div class="wrapper">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+Quentin Ikeno            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/category/data-analyst-nanodegree.html">Data analyst nanodegree</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/investigate-the-titanic-dataset.html"
+                       rel="bookmark"
+                       title="Permalink to Investigate the Titanic Dataset">
+                        Investigate the Titanic Dataset
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2018-02-18T10:20:00-10:00"> Sun 18 February 2018</time>
+    </span>
 
-		  <div role="main" class="content">
-	<article class="full">
-			
-		<h1>Investigate the Titanic Dataset</h1>
-		
-<div class="metadata">
-  <time datetime="2018-02-18T10:20:00-10:00" pubdate>Sun 18 February 2018</time>
-    <address class="vcard author">
-      by <a class="url fn" href="/author/quentin-ikeno.html">Quentin Ikeno</a>
-    </address>
-  in <a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a>
-<p class="tags">tagged <a href="/tag/python.html">Python</a>, <a href="/tag/data-analysis.html">Data Analysis</a>, <a href="/tag/udacity.html">Udacity</a></p></div>		
-		<h2>Introduction</h2>
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/python.html">Python</a>
+        /
+	<a href="/tag/data-analysis.html">Data Analysis</a>
+        /
+	<a href="/tag/udacity.html">Udacity</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Introduction</h2>
 <p>On April 25, 1912, the R.M.S. Titanic made a fatal collision with an iceberg in the North Atlantic Ocean; over 1,500 passengers and crew perished in the accident.  The purpose of this project will be to investigate and analyze a dataset of passengers who were aboard the Titanic.</p>
 <h2>Questions</h2>
 <p>Upon looking at the dataset (information about the datset is provided <a href="https://www.kaggle.com/c/titanic/data">here</a>), I began to pose a few questions that were interesting:</p>
@@ -561,57 +627,97 @@ Name: Fare, dtype: float64
 <p>Wooley, Joe.  2013.  Web.  24 July 2017. <a href="https://www.encyclopedia-titanica.org/files/1/figure-one-side-view.gif">https://www.encyclopedia-titanica.org/files/1/figure-one-side-view.gif</a></p>
 <p>https://pandas.pydata.org/pandas-docs/stable/generated/pandas.isnull.html</p>
 <p>https://pythonspot.com/en/matplotlib-pie-chart/</p>
-<p>https://www.youtube.com/watch?v=in8LJ-aR8T8&amp;index=11&amp;list=FLurR4-Efg0eUdRg7mq1HZhg&amp;t=660s</p>	
+<p>https://www.youtube.com/watch?v=in8LJ-aR8T8&amp;index=11&amp;list=FLurR4-Efg0eUdRg7mq1HZhg&amp;t=660s</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
 
-	</article>
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
 
-    <p>
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	</p>
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/quentin-ikeno/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
+    <li class="list-group-item"><a href="https://github.com/quentinikeno"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="/create-a-tableau-story.html">Create a Tableau Story</a></li>
+    <li class="list-group-item"><a href="/identify-fraud-from-enron-email.html">Identify Fraud from Enron Email</a></li>
+    <li class="list-group-item"><a href="/test-a-perceptual-phenomenon.html">Test a Perceptual Phenomenon</a></li>
+    <li class="list-group-item"><a href="/exploration-of-tsa-claims-data.html">Exploration of TSA Claims Data</a></li>
+    <li class="list-group-item"><a href="/wrangle-openstreetmap-data.html">Wrangle OpenStreetMap Data</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="/category/data-analyst-nanodegree.html"><i class="fa fa-folder-open fa-lg"></i>Data Analyst Nanodegree</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="http://getpelican.com/" target="_blank">Pelican</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://python.org/" target="_blank">Python.org</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2018 Quentin
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
 
 
-		  </div>	
-		  
-		  <div class="sidebar">
 
-	        <nav>
-	          <h2>Categories</h2>
-	          <ul>
-	              <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
-	          </ul>
-	        </nav>
-
-	          <aside>
-	          <h2>Social</h2>
-			    <ul class="social">
-				  <li><a href="https://www.linkedin.com/in/quentin-ikeno/">linkedin</a><i></i></li>
-				  <li><a href="https://github.com/quentinikeno">github</a><i></i></li>
-			    </ul>
-			  </aside>
-
-	          <aside>
-	            <h2>Blogroll</h2>
-	            <ul>
-	                <li><a href="http://getpelican.com/">Pelican</a></li>
-	                <li><a href="http://python.org/">Python.org</a></li>
-	                <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-	            </ul>
-	          </aside>
-
-		  </div>
-
-	  </div>
-
-      <footer>
-		<p role="contentinfo">
-		  © 2013 Quentin - Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>. Theme <a href="https://github.com/fle/pelican-simplegrey">pelican-simplegrey</a>.
-    	</p>
-
-	  </footer>	
-
-	</div>
-	
 
 </body>
 </html>
