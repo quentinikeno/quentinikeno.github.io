@@ -121,20 +121,25 @@
 			</ul>
 		</header>
 
-		<h2>Background</h2>
+		<h3>Background</h3>
 <blockquote>
 <p>In a Stroop task, participants are presented with a list of words, with each word displayed in a color of ink. The participant's task is to say out loud the color of the ink in which the word is printed. The task has two conditions: a congruent words condition, and an incongruent words condition. In the congruent words condition, the words being displayed are color words whose names match the colors in which they are printed. In the incongruent words condition, the words displayed are color words whose names do not match the colors in which they are printed. In each case, we measure the time it takes to name the ink colors in equally-sized lists. Each participant will go through and record a time from each condition.</p>
 </blockquote>
+<div class="highlight"><pre><span></span>## Find out what&#39;s changed in ggplot2 at
+## http://github.com/tidyverse/ggplot2/releases.
+</pre></div>
+
+
 <div class="highlight"><pre><span></span>## Error in file(file, &quot;rt&quot;): cannot open the connection
 </pre></div>
 
 
-<h3>What is our independent variable?  What is our dependent variable?</h3>
+<h4>What is our independent variable?  What is our dependent variable?</h4>
 <p>The independent variable in this dataset is the type of condition (i.e. the
 congruent words condition and the incongruent words condition).  The dependent
 variable is the time taken for participants to go through the list for each 
 condition.</p>
-<h3>What is an appropriate set of hypotheses for this task?  What kind of statistical test do you expect to perform?  Justify your choices.</h3>
+<h4>What is an appropriate set of hypotheses for this task?  What kind of statistical test do you expect to perform?  Justify your choices.</h4>
 <p>The set of hypotheses for this test will be:</p>
 <p><span class="math">\(H_{0}\)</span>: <span class="math">\(\mu_{I}\)</span> - <span class="math">\(\mu_{C}\)</span> <span class="math">\(=\)</span> 0</p>
 <p>(There is no significant difference between the population mean completion time
@@ -162,7 +167,7 @@ for tests taken by the same subject.  </p>
 paired t-test is that the data we sample from comes from a normal distribution.
 We will check this assumption later in the report by visaulizing our sample 
 data.</p>
-<h3>Report some descriptive statistics regarding this dataset. Include at least one measure of central tendency and at least one measure of variability.</h3>
+<h4>Report some descriptive statistics regarding this dataset. Include at least one measure of central tendency and at least one measure of variability.</h4>
 <div class="highlight"><pre><span></span>## Error in summary(stroop$Congruent): object &#39;stroop&#39; not found
 </pre></div>
 
@@ -184,7 +189,7 @@ what will the incongruent condition data look like?</p>
 
 <p>The mean time is 22.02 while the standard deviation is 4.797.  Let's get another
 look at the distribution of the data with visualizations.</p>
-<h3>Provide one or two visualizations that show the distribution of the sample data. Write one or two sentences noting what you observe about the plot or plots.</h3>
+<h4>Provide one or two visualizations that show the distribution of the sample data. Write one or two sentences noting what you observe about the plot or plots.</h4>
 <div class="highlight"><pre><span></span>## Error in eval(aesthetics$x, data, env): object &#39;stroop&#39; not found
 </pre></div>
 
@@ -238,18 +243,18 @@ using a very large sample.  Since we cannot fulfill this requirement, typically
 this means that we cannot perform the t-test and should perform some other kind
 of test.  That being said, for the sake of completing this project I will go 
 ahead and perform the paired t-test.</p>
-<h3>Now, perform the statistical test and report your results.  What is your confidence level and your critical statistic value?  Do you reject the null hypothesis or fail to reject it?  Come to a conclusion in terms of the experiment task.  Did the results match up with your expectations?</h3>
+<h4>Now, perform the statistical test and report your results.  What is your confidence level and your critical statistic value?  Do you reject the null hypothesis or fail to reject it?  Come to a conclusion in terms of the experiment task.  Did the results match up with your expectations?</h4>
 <p>The confidence level I decided to use an <span class="math">\(\alpha\)</span> = 0.05 meaning our confidence
 level will be 0.95.  The test statistic I came up with is 8.0207.  Using a 
 t-table, the critical statistic value, with 23 degrees of freedom, is 1.7139.  So, since the test statistic (8.0207) is greater than the critical value 
 (1.7139) we should reject the null hypothesis.  We can conclude that there is 
 evidence that the difference between the population mean completion time for the incongruent condition and the congruent condition is greater than 0.</p>
-<h2>Conclusion</h2>
+<h3>Conclusion</h3>
 <p>From these results it appears as though participants in the Stroop task take
 significantly longer when it comes to completing the list of incongruent words.
 These findings happened to match up with my expectations, as I personally took 
 longer to complete the incongruent condition when performing the Stroop task.</p>
-<h2>References</h2>
+<h3>References</h3>
 <p>https://www.r-bloggers.com/normality-tests-for-continuous-data/</p>
 <p>http://ggplot2.tidyverse.org/reference/geom_qq.html</p>
 <p>http://www.statisticshowto.com/when-to-use-a-t-score-vs-z-score/</p>
