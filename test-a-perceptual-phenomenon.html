@@ -122,9 +122,10 @@
 		</header>
 
 		<h2>Background</h2>
+<blockquote>
 <p>In a Stroop task, participants are presented with a list of words, with each word displayed in a color of ink. The participant's task is to say out loud the color of the ink in which the word is printed. The task has two conditions: a congruent words condition, and an incongruent words condition. In the congruent words condition, the words being displayed are color words whose names match the colors in which they are printed. In the incongruent words condition, the words displayed are color words whose names do not match the colors in which they are printed. In each case, we measure the time it takes to name the ink colors in equally-sized lists. Each participant will go through and record a time from each condition.</p>
-<div class="highlight"><pre><span></span>## Stackoverflow is a great place to get help:
-## http://stackoverflow.com/tags/ggplot2.
+</blockquote>
+<div class="highlight"><pre><span></span>## Error in file(file, &quot;rt&quot;): cannot open the connection
 </pre></div>
 
 
@@ -162,49 +163,61 @@ paired t-test is that the data we sample from comes from a normal distribution.
 We will check this assumption later in the report by visaulizing our sample 
 data.</p>
 <h3>Report some descriptive statistics regarding this dataset. Include at least one measure of central tendency and at least one measure of variability.</h3>
-<div class="highlight"><pre><span></span>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    8.63   11.90   14.36   14.05   16.20   22.33
+<div class="highlight"><pre><span></span>## Error in summary(stroop$Congruent): object &#39;stroop&#39; not found
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>## [1] 3.559358
+<div class="highlight"><pre><span></span>## Error in is.data.frame(x): object &#39;stroop&#39; not found
 </pre></div>
 
 
 <p>Here are some descriptive statistics for the congruent condition data.  We can 
 see that the mean time is 14.05 with a standard deviation of 3.559.  That said,
 what will the incongruent condition data look like?</p>
-<div class="highlight"><pre><span></span>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   15.69   18.72   21.02   22.02   24.05   35.26
+<div class="highlight"><pre><span></span>## Error in summary(stroop$Incongruent): object &#39;stroop&#39; not found
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>## [1] 4.797057
+<div class="highlight"><pre><span></span>## Error in is.data.frame(x): object &#39;stroop&#39; not found
 </pre></div>
 
 
 <p>The mean time is 22.02 while the standard deviation is 4.797.  Let's get another
 look at the distribution of the data with visualizations.</p>
 <h3>Provide one or two visualizations that show the distribution of the sample data. Write one or two sentences noting what you observe about the plot or plots.</h3>
-<p><img alt="plot of chunk unnamed-chunk-4" src="/figure/Stroop-unnamed-chunk-4-1.png"></p>
+<div class="highlight"><pre><span></span>## Error in eval(aesthetics$x, data, env): object &#39;stroop&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(aesthetics$x, data, env): object &#39;stroop&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in arrangeGrob(...): object &#39;p1&#39; not found
+</pre></div>
+
+
 <p>Looking at the histogram for the congruent condition data, it appears as though
 the data is most likely normally distributed.  On the other hand, the histogram
 for the incongruent condition data appears as though it may have some outlier
 participants which may affect the normality of the data.</p>
-<p><img alt="plot of chunk unnamed-chunk-5" src="/figure/Stroop-unnamed-chunk-5-1.png"></p>
-<div class="highlight"><pre><span></span>## 
-##  Anderson-Darling normality test
-## 
-## data:  stroop$Congruent
-## A = 0.20967, p-value = 0.8432
+<div class="highlight"><pre><span></span>## Error in ggplot(data = stroop, aes(sample = Congruent)): object &#39;stroop&#39; not found
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>## 
-##  Anderson-Darling normality test
-## 
-## data:  stroop$Incongruent
-## A = 1.0696, p-value = 0.006709
+<div class="highlight"><pre><span></span>## Error in ggplot(data = stroop, aes(sample = Incongruent)): object &#39;stroop&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in arrangeGrob(...): object &#39;p3&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in sort(x[complete.cases(x)]): object &#39;stroop&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in sort(x[complete.cases(x)]): object &#39;stroop&#39; not found
 </pre></div>
 
 
@@ -319,7 +332,6 @@ longer to complete the incongruent condition when performing the Stroop task.</p
 			<nav class="categories">
 				<ul>
 					    <li class="active"><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
-					    <li><a href="/category/side-projects.html">Side Projects</a></li>
 				</ul>
 			</nav>
 		</div>
