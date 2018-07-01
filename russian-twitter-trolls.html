@@ -1,0 +1,743 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="english"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="english">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="Quentin">
+
+
+        <title>Quentin Ikeno - "Russian Twitter Trolls"</title>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="/theme/css/colors/navy.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+        <meta name="tags" contents="R" />
+        <meta name="tags" contents="Data Cleaning" />
+        <meta name="tags" contents="Data Analysis" />
+    <meta property="og:type" content="article">
+    <meta property="og:title" content=""Russian Twitter Trolls"">
+    <meta property="og:url" content="russian-twitter-trolls.html">
+    <meta property="og:description" content="Analyzing Twitter Data from Russian Trolls">
+    <meta property="article:published_time" content="Monday, June 18, 2018">
+    <meta name="twitter:title" content=""Russian Twitter Trolls"">
+    <meta name="twitter:description" content="Analyzing Twitter Data from Russian Trolls">
+    <meta name="description" content="Analyzing Twitter Data from Russian Trolls">
+    <meta name="twitter:image" content="">
+    <meta property="og:image" content="">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Quentin Ikeno">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/russian-twitter-trolls.html">
+	<meta property="og:title" content=""Russian Twitter Trolls"">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2018-06-18 00:00:00-10:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="five columns">
+					<div id="textlogo">
+						<h1><a href="/">Quentin Ikeno</a></h1>
+					</div>
+				</div>
+						<!-- Navigation
+				================================================== -->
+				<div class="eleven columns">
+
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="/">Home</a></li>
+
+
+							        <li><a href="/pages/about-me.html">About Me</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+
+		<!-- Breadcrumbs Container-->
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+				<div class="thirteen columns">
+					<nav id="breadcrumbs">
+						<ul>
+							<li>You are here:</li>
+							<li><a href="/">Home</a></li>
+<li><a href="/category/side-project.html">Side Project</a></li>
+<li>"Russian Twitter Trolls"</li>
+						</ul>
+					</nav>
+				</div>
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="/russian-twitter-trolls.html">"Russian Twitter Trolls"</a></h2>
+			<ul>
+				<li>By <a href="/author/quentin-ikeno.html">"Quentin Ikeno"</a></li>
+				<li>Mon 18 June 2018</li>
+			</ul>
+		</header>
+
+		<h1>Introduction</h1>
+<p>As part of the House Intelligence Committee investigation into how Russia may have influenced the 2016 US Election, Twitter released the screen names of almost 3000 Twitter accounts believed to be connected to Russia's Internet Research Agency, a company known for operating social media troll accounts.  The goal of these accounts was to tweet controversial and divisive content in order to divide Americans and influence the 2016 U.S. presidential election.</p>
+<p>The goal of this project will be to visualize the Russian troll data and to see what information can be obtained from it.  The data comes from a team at NBC News who were able to reconstruct a subset of the Twitter data from the Russian Trolls.</p>
+<div class="highlight"><pre><span></span><span class="c1">#set working directory</span>
+<span class="kp">setwd</span><span class="p">(</span><span class="s">&quot;C:/Users/Quentin/Documents/Data_Side_Projects/russian_trolls&quot;</span><span class="p">)</span>
+
+<span class="c1">#read in csvs</span>
+tweets <span class="o">&lt;-</span> read.csv<span class="p">(</span>
+  <span class="s">&#39;tweets.csv&#39;</span>
+  <span class="p">)</span>
+users <span class="o">&lt;-</span> read.csv<span class="p">(</span>
+  <span class="s">&#39;users.csv&#39;</span>
+  <span class="p">)</span>
+</pre></div>
+
+
+<h2>Missing Data</h2>
+<div class="highlight"><pre><span></span><span class="c1">#plot missing data</span>
+plot_missing<span class="p">(</span>tweets<span class="p">,</span> <span class="s">&quot;Missing Data for Tweets Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-2" src="/figure/russian_tweets_2-unnamed-chunk-2-1.png"></p>
+<div class="highlight"><pre><span></span>plot_missing<span class="p">(</span>users<span class="p">,</span> <span class="s">&quot;Missing Data for Users Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-2" src="/figure/russian_tweets_2-unnamed-chunk-2-2.png"></p>
+<p>The tweets data had four collumns with over 70% missing data--in fact, the "in_reply_to_satus_id" collumn had 100% missing data.  Thus, I decided to remove these collumns from the tweets data.</p>
+<div class="highlight"><pre><span></span><span class="c1">#remove collumns with a missing majority of rows</span>
+tweets <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>tweets<span class="p">,</span> 
+                 select <span class="o">=</span> <span class="o">-</span><span class="kt">c</span><span class="p">(</span>favorite_count<span class="p">,</span> 
+                             retweet_count<span class="p">,</span>
+                             retweeted_status_id<span class="p">,</span>
+                             in_reply_to_status_id<span class="p">)</span> 
+                 <span class="p">)</span>
+</pre></div>
+
+
+<h2>Cleaning Dates</h2>
+<p>Before we do any time series visualizations, the dates data need to be cleaned.  Dates in the users dataset are of the form "Wed Jan 07 04:38:02 +0000 2009" and dates in the tweets datset are of the form "3/22/2016  6:31:42 PM" so we need to make sure that the dates in both datsets are in the same format.  I decided to change the dates into the latter format using tidyr and lubridate.</p>
+<div class="highlight"><pre><span></span><span class="c1">#split up date-time data in users data frame</span>
+users <span class="o">&lt;-</span> users <span class="o">%&gt;%</span> separate<span class="p">(</span>created_at<span class="p">,</span> 
+                  <span class="kt">c</span><span class="p">(</span><span class="s">&#39;weekday&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;day&#39;</span><span class="p">,</span> <span class="s">&#39;time&#39;</span><span class="p">,</span> <span class="s">&#39;zone&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="p">),</span>
+                  sep <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="p">,</span> 
+                  extra <span class="o">=</span> <span class="s">&quot;drop&quot;</span><span class="p">,</span> 
+                  fill <span class="o">=</span> <span class="s">&quot;right&quot;</span><span class="p">)</span>
+
+<span class="c1">#recombine year, month, and day collumns into a collumn of dates</span>
+users<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kp">with</span><span class="p">(</span>users<span class="p">,</span> <span class="kp">paste</span><span class="p">(</span>year<span class="p">,</span> month<span class="p">,</span> day<span class="p">,</span> sep <span class="o">=</span> <span class="s">&quot;-&quot;</span><span class="p">))</span>
+
+<span class="c1">#convert time from character to time</span>
+users<span class="o">$</span>time <span class="o">&lt;-</span> times<span class="p">(</span>users<span class="o">$</span>time<span class="p">)</span>
+
+<span class="c1">#combine dates and times</span>
+users<span class="o">$</span>created_date_time <span class="o">&lt;-</span> <span class="kp">with</span><span class="p">(</span>users<span class="p">,</span> <span class="kp">paste</span><span class="p">(</span><span class="kp">date</span><span class="p">,</span> time<span class="p">,</span> sep <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="p">))</span>
+
+<span class="c1">#convert date-times from character class to POSIXct</span>
+users<span class="o">$</span>created_date_time <span class="o">&lt;-</span> parse_date_time<span class="p">(</span>users<span class="o">$</span>created_date_time<span class="p">,</span>
+                                           <span class="s">&quot;%Y-%b-%d %H:%M:%S&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning: 70 failed to parse.
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1">#change abbreviated weekday to full spelling</span>
+users<span class="o">$</span>weekday <span class="o">&lt;-</span> <span class="kp">weekdays</span><span class="p">(</span>users<span class="o">$</span>created_date_time<span class="p">)</span>
+users<span class="o">$</span>weekday <span class="o">&lt;-</span> <span class="kp">ordered</span><span class="p">(</span>users<span class="o">$</span>weekday<span class="p">,</span> 
+                         levels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Sunday&quot;</span><span class="p">,</span> <span class="s">&quot;Monday&quot;</span><span class="p">,</span> <span class="s">&quot;Tuesday&quot;</span><span class="p">,</span> <span class="s">&quot;Wednesday&quot;</span><span class="p">,</span>                                              <span class="s">&quot;Thursday&quot;</span><span class="p">,</span> <span class="s">&quot;Friday&quot;</span><span class="p">,</span> <span class="s">&quot;Saturday&quot;</span><span class="p">))</span>
+
+<span class="c1">#drop individual collumns from users</span>
+users <span class="o">&lt;-</span> <span class="kp">subset</span><span class="p">(</span>users<span class="p">,</span> select <span class="o">=</span> <span class="o">-</span><span class="kt">c</span><span class="p">(</span>zone<span class="p">,</span> <span class="kp">date</span><span class="p">,</span> time<span class="p">)</span> <span class="p">)</span>
+
+<span class="c1">#convert tweets date-time data to POSIXct</span>
+tweets<span class="o">$</span>created_str <span class="o">&lt;-</span> ymd_hms<span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+
+<span class="c1">#create date, weekday, year, month, and day variables</span>
+tweets<span class="o">$</span>hour <span class="o">&lt;-</span> <span class="kp">strftime</span><span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">,</span> format <span class="o">=</span> <span class="s">&quot;%H&quot;</span><span class="p">)</span>
+tweets<span class="o">$</span>date <span class="o">&lt;-</span> <span class="kp">as.Date</span><span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+tweets<span class="o">$</span>weekday <span class="o">&lt;-</span> <span class="kp">weekdays</span><span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+tweets<span class="o">$</span>weekday <span class="o">&lt;-</span> <span class="kp">ordered</span><span class="p">(</span>tweets<span class="o">$</span>weekday<span class="p">,</span> 
+                         levels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Sunday&quot;</span><span class="p">,</span> <span class="s">&quot;Monday&quot;</span><span class="p">,</span> <span class="s">&quot;Tuesday&quot;</span><span class="p">,</span> <span class="s">&quot;Wednesday&quot;</span><span class="p">,</span>                                              <span class="s">&quot;Thursday&quot;</span><span class="p">,</span> <span class="s">&quot;Friday&quot;</span><span class="p">,</span> <span class="s">&quot;Saturday&quot;</span><span class="p">))</span>
+tweets<span class="o">$</span>year <span class="o">&lt;-</span> year<span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+tweets<span class="o">$</span>month <span class="o">&lt;-</span> month<span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">,</span> label <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> abbr <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+tweets<span class="o">$</span>day <span class="o">&lt;-</span> day<span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+tweets<span class="o">$</span>week <span class="o">&lt;-</span> week<span class="p">(</span>tweets<span class="o">$</span>created_str<span class="p">)</span>
+</pre></div>
+
+
+<h1>Data Visualizations</h1>
+<h2>Time Series Visualizations</h2>
+<div class="highlight"><pre><span></span><span class="c1">#group accounts by month and year and list the number of accounts per month</span>
+accounts.monthly <span class="o">&lt;-</span> users <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>year<span class="p">,</span> month<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarize<span class="p">(</span>n <span class="o">=</span> n<span class="p">())</span> <span class="o">%&gt;%</span>
+  drop_na<span class="p">(</span>month<span class="p">)</span> <span class="o">%&gt;%</span>
+  ungroup<span class="p">()</span> <span class="o">%&gt;%</span>
+  complete<span class="p">(</span>year<span class="p">,</span> month<span class="p">,</span> fill <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>n <span class="o">=</span> <span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> <span class="kp">paste</span><span class="p">(</span>month<span class="p">,</span> <span class="s">&#39;01&#39;</span><span class="p">,</span> year<span class="p">,</span> sep <span class="o">=</span> <span class="s">&#39;-&#39;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kp">date</span><span class="p">,</span> format <span class="o">=</span> <span class="s">&#39;%b-%d-%Y&#39;</span><span class="p">))</span>
+
+<span class="c1">#plot Russian account creation</span>
+ggplot<span class="p">(</span>data <span class="o">=</span> accounts.monthly<span class="p">,</span>
+      aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> n<span class="p">))</span> <span class="o">+</span> 
+  geom_line<span class="p">(</span>size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&#39;#2C69B0&#39;</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.grid.major.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        panel.grid.minor <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&#39;Number of New Russian Accounts by Month&#39;</span><span class="p">)</span> <span class="o">+</span> 
+  ylab<span class="p">(</span><span class="s">&#39;Russian Twitter Accounts&#39;</span><span class="p">)</span> <span class="o">+</span>
+  xlab<span class="p">(</span><span class="s">&#39;Account Creation Date&#39;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> 
+           label <span class="o">=</span> <span class="s">&#39;bold(&quot;Nov. 2016\nUnited States\nPresidential\nElection&quot;)&#39;</span><span class="p">,</span> 
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-04-08&#39;</span><span class="p">),</span> 
+           y <span class="o">=</span> <span class="m">55</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           parse <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;pointrange&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-11-08&#39;</span><span class="p">),</span>
+           y <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           ymax <span class="o">=</span> <span class="m">50</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> 
+           label <span class="o">=</span> <span class="s">&#39;bold(&quot;May. 2014\nUkraine\nPresidential\nElection&quot;)&#39;</span><span class="p">,</span> 
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2014-02-01&#39;</span><span class="p">),</span> 
+           y <span class="o">=</span> <span class="m">74</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           parse <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;pointrange&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2014-05-01&#39;</span><span class="p">),</span>
+           y <span class="o">=</span> <span class="m">65</span><span class="p">,</span>
+           ymin <span class="o">=</span> <span class="m">65</span><span class="p">,</span>
+           ymax <span class="o">=</span> <span class="m">70</span><span class="p">)</span> <span class="o">+</span>
+  scale_x_date<span class="p">(</span>limits <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&#39;2008-09-01&#39;</span><span class="p">,</span> <span class="s">&#39;2017-04-01&#39;</span><span class="p">)))</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-5" src="/figure/russian_tweets_2-unnamed-chunk-5-1.png"></p>
+<p>What immediately caught my attention was that the majority of Russian accounts were created in 2013 and 2014--several years in advance of the 2016 US presidential election.  Another thing I noticed, was that the second peak in account creation seems to coincide with Russia's interference in the May 2014 Ukranian election, when Russian hackers launched cyber-attacks on servers at Ukraine's central election commision.  That said, this connection may be a coincidence.</p>
+<div class="highlight"><pre><span></span><span class="c1">#group tweets by month and year and list the number of tweets per month</span>
+tweets.monthly <span class="o">&lt;-</span> tweets <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>year<span class="p">,</span> month<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarize<span class="p">(</span>n <span class="o">=</span> n<span class="p">())</span> <span class="o">%&gt;%</span>
+  drop_na<span class="p">(</span>month<span class="p">)</span> <span class="o">%&gt;%</span>
+  ungroup<span class="p">()</span> <span class="o">%&gt;%</span>
+  complete<span class="p">(</span>year<span class="p">,</span> month<span class="p">,</span> fill <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>n <span class="o">=</span> <span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> <span class="kp">paste</span><span class="p">(</span>month<span class="p">,</span> <span class="s">&#39;01&#39;</span><span class="p">,</span> year<span class="p">,</span> sep <span class="o">=</span> <span class="s">&#39;-&#39;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>date <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kp">date</span><span class="p">,</span> format <span class="o">=</span> <span class="s">&#39;%b-%d-%Y&#39;</span><span class="p">))</span>
+
+<span class="c1">#plot Russian tweets</span>
+ggplot<span class="p">(</span>data <span class="o">=</span> tweets.monthly<span class="p">,</span>
+      aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> n<span class="p">))</span> <span class="o">+</span> 
+  geom_line<span class="p">(</span>size <span class="o">=</span> <span class="m">.75</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&#39;#2C69B0&#39;</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&#39;Number of Russian Tweets by Month&#39;</span><span class="p">)</span> <span class="o">+</span> 
+  ylab<span class="p">(</span><span class="s">&#39;Tweets&#39;</span><span class="p">)</span> <span class="o">+</span>
+  xlab<span class="p">(</span><span class="s">&#39;Tweet Date&#39;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> 
+           label <span class="o">=</span> <span class="s">&#39;bold(&quot;Nov. 2016\nUS Presidential\nElection&quot;)&#39;</span><span class="p">,</span> 
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-11-08&#39;</span><span class="p">),</span> 
+           y <span class="o">=</span> <span class="m">36000</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           parse <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span> 
+  annotate<span class="p">(</span><span class="s">&quot;pointrange&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-11-08&#39;</span><span class="p">),</span>
+           y <span class="o">=</span> <span class="m">21805</span><span class="p">,</span>
+           ymin <span class="o">=</span> <span class="m">21805</span><span class="p">,</span>
+           ymax <span class="o">=</span> <span class="m">34500</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> 
+           label <span class="o">=</span> <span class="s">&#39;bold(&quot;July 2016\nDonald Trump Accepts Republican Nomination\nHillary Clinton Accepts Democratic Nomination&quot;)&#39;</span><span class="p">,</span> 
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2014-04-01&#39;</span><span class="p">),</span> 
+           y <span class="o">=</span> <span class="m">15000</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           parse <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span> 
+  annotate<span class="p">(</span><span class="s">&quot;pointrange&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-7-01&#39;</span><span class="p">),</span>
+           y <span class="o">=</span> <span class="m">7278</span><span class="p">,</span>
+           ymin <span class="o">=</span> <span class="m">7278</span><span class="p">,</span>
+           ymax <span class="o">=</span> <span class="m">14000</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> 
+           label <span class="o">=</span> <span class="s">&#39;bold(&quot;Jan. 2017\nDonald Trump Sworn\nin as US President&quot;)&#39;</span><span class="p">,</span> 
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2017-01-01&#39;</span><span class="p">),</span> 
+           y <span class="o">=</span> <span class="m">25000</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">0</span><span class="p">,</span>
+           parse <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span> 
+  annotate<span class="p">(</span><span class="s">&quot;pointrange&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2017-01-01&#39;</span><span class="p">),</span>
+           y <span class="o">=</span> <span class="m">21067</span><span class="p">,</span>
+           ymin <span class="o">=</span> <span class="m">21067</span><span class="p">,</span>
+           ymax <span class="o">=</span> <span class="m">23500</span><span class="p">)</span> <span class="o">+</span>
+  ylim<span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">40000</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.grid.major.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        panel.grid.minor <span class="o">=</span> element_blank<span class="p">())</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-6" src="/figure/russian_tweets_2-unnamed-chunk-6-1.png"></p>
+<p>Even though the most of the Russian Twitter bots were created in 2013 and 2014, we can see that only a relatively small amount of tweets were made in 2014.  Eventually they started tweeting the tens of thousands in the months preceding and following the 2016 presidential election.  The tweets per month peak in October, one month before the election and drop off after the inauguration of Donald Trump as president.</p>
+<div class="highlight"><pre><span></span><span class="c1">#count tweets by day</span>
+tweets.weekday <span class="o">&lt;-</span> tweets <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>year<span class="p">,</span> month<span class="p">,</span> week<span class="p">,</span> weekday<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarize<span class="p">(</span>n <span class="o">=</span> n<span class="p">())</span> <span class="o">%&gt;%</span>
+  drop_na<span class="p">()</span> <span class="o">%&gt;%</span>
+  ddply<span class="p">(</span><span class="m">.</span><span class="p">(</span>month<span class="p">),</span> <span class="kp">transform</span><span class="p">,</span> monthweek <span class="o">=</span> <span class="m">1</span> <span class="o">+</span> week <span class="o">-</span> <span class="kp">min</span><span class="p">(</span>week<span class="p">))</span>
+
+<span class="c1">#plot heatmap</span>
+ggplot<span class="p">(</span>data <span class="o">=</span> tweets.weekday<span class="p">,</span>
+       aes<span class="p">(</span>x <span class="o">=</span> monthweek<span class="p">,</span> y <span class="o">=</span> weekday<span class="p">,</span> fill <span class="o">=</span> n<span class="p">))</span> <span class="o">+</span>
+  geom_tile<span class="p">(</span>size <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;#F0F0F0&quot;</span><span class="p">)</span> <span class="o">+</span>
+  facet_grid<span class="p">(</span>year<span class="o">~</span>month<span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span> 
+  scale_fill_viridis<span class="p">(</span>name <span class="o">=</span> <span class="s">&#39;# of Tweets&#39;</span><span class="p">,</span> direction <span class="o">=</span> <span class="m">-1</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>axis.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span>
+              axis.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
+              panel.grid.major.y <span class="o">=</span> element_blank<span class="p">(),</span>
+              panel.grid.major.x <span class="o">=</span> element_blank<span class="p">(),</span>
+              panel.grid.minor <span class="o">=</span> element_blank<span class="p">(),</span>
+              plot.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
+              legend.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              legend.key.width <span class="o">=</span> unit<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s">&quot;cm&quot;</span><span class="p">),</span>
+              legend.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              legend.key.size <span class="o">=</span> unit<span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="s">&quot;cm&quot;</span><span class="p">),</span>
+              strip.text <span class="o">=</span> element_text<span class="p">(</span><span class="c1">#hjust = 0, </span>
+                                        <span class="c1">#face = &quot;bold&quot;, </span>
+                                        size <span class="o">=</span> <span class="m">7</span><span class="p">))</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&#39;Tweets by Weekday&#39;</span><span class="p">)</span> <span class="o">+</span>
+  xlab<span class="p">(</span><span class="s">&#39;\nWeek of Month&#39;</span><span class="p">)</span> <span class="o">+</span>
+  ylab<span class="p">(</span><span class="s">&#39;Weekday&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img src="/figure/russian_tweets_2-unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" width="100%" height="100%" /></p>
+<p>I noticed that the bots tweeted for several weeks each in July, then tweeted only once during August and September before starting again in November.  Perhaps the Russians tested their bots in July, before making changes and starting again in November.</p>
+<div class="highlight"><pre><span></span>tweets.hourly <span class="o">&lt;-</span> tweets <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>hour<span class="p">,</span> weekday<span class="p">,</span> year<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarize<span class="p">(</span>n <span class="o">=</span> n<span class="p">())</span> <span class="o">%&gt;%</span>
+  drop_na<span class="p">()</span>
+
+ggplot<span class="p">(</span>data <span class="o">=</span> tweets.hourly<span class="p">,</span>
+       aes<span class="p">(</span>x <span class="o">=</span> hour<span class="p">,</span> y <span class="o">=</span> weekday<span class="p">,</span> fill <span class="o">=</span> n<span class="p">))</span> <span class="o">+</span>
+  geom_tile<span class="p">(</span>size <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&#39;#F0F0F0&#39;</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  <span class="c1">#facet_wrap(~year) +</span>
+  scale_fill_viridis<span class="p">(</span>name <span class="o">=</span> <span class="s">&quot;# of Tweets&quot;</span><span class="p">,</span> direction <span class="o">=</span> <span class="m">-1</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>axis.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span>
+              axis.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">5</span><span class="p">),</span>
+              panel.grid.major.y <span class="o">=</span> element_blank<span class="p">(),</span>
+              panel.grid.major.x <span class="o">=</span> element_blank<span class="p">(),</span>
+              panel.grid.minor <span class="o">=</span> element_blank<span class="p">(),</span>
+              plot.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
+              legend.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              legend.key.width <span class="o">=</span> unit<span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s">&quot;cm&quot;</span><span class="p">),</span>
+              legend.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">6</span><span class="p">),</span>
+              legend.key.size <span class="o">=</span> unit<span class="p">(</span><span class="m">0.2</span><span class="p">,</span> <span class="s">&quot;cm&quot;</span><span class="p">),</span>
+              strip.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">7</span><span class="p">))</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&quot;Tweets by Hour&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  xlab<span class="p">(</span><span class="s">&#39;Hour&#39;</span><span class="p">)</span> <span class="o">+</span>
+  ylab<span class="p">(</span><span class="s">&#39;Weekday&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-8" src="/figure/russian_tweets_2-unnamed-chunk-8-1.png"></p>
+<h2>Text Analysis</h2>
+<p>Let's go more in depth as to the content of the Russian tweets.  I decided to make word clouds for each year in the dataset to see how the content of the tweets changed over time.  Before creating the word clouds the text data needed to be cleaned of Russian words as well as common words and symbols used in tweets such as "RT" for "retweet."</p>
+<div class="highlight"><pre><span></span><span class="c1">#convert tweets to english and subset the data by year</span>
+tweets.year <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>my_year<span class="p">){</span>
+  tweets.english <span class="o">&lt;-</span> tweets <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>year <span class="o">==</span> my_year<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="c1">#convert to latin to eliminate russian words from the corpus</span>
+  mutate<span class="p">(</span><span class="kp">iconv</span><span class="p">(</span>text<span class="p">,</span> <span class="s">&quot;latin1&quot;</span><span class="p">,</span> <span class="s">&quot;ASCII&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  drop_na<span class="p">()</span>
+  <span class="kr">return</span><span class="p">(</span>tweets.english<span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">#this function makes a corpus of tweets from a specific year</span>
+corpus_year <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>my_year<span class="p">)</span> <span class="p">{</span>
+  tweets.english <span class="o">&lt;-</span> tweets.year<span class="p">(</span>my_year<span class="p">)</span>
+
+  <span class="c1">#remove twitter handles</span>
+  tweets.english<span class="o">$</span>text <span class="o">&lt;-</span> <span class="kp">gsub</span><span class="p">(</span><span class="s">&quot;@\\w+&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> tweets.english<span class="o">$</span>text<span class="p">)</span>
+  <span class="c1">#remove links</span>
+  tweets.english<span class="o">$</span>text <span class="o">&lt;-</span> <span class="kp">gsub</span><span class="p">(</span><span class="s">&quot;http\\w+&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> tweets.english<span class="o">$</span>text<span class="p">)</span>
+
+  tweet.corpus <span class="o">&lt;-</span> Corpus<span class="p">(</span>VectorSource<span class="p">(</span>tweets.english<span class="o">$</span>text<span class="p">))</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> PlainTextDocument<span class="p">)</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> <span class="kp">tolower</span><span class="p">)</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> removeNumbers<span class="p">)</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> removePunctuation<span class="p">)</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> 
+                         removeWords<span class="p">,</span> 
+                         stopwords<span class="p">(</span><span class="s">&quot;English&quot;</span><span class="p">))</span>
+  <span class="c1">#remove RT and ampersand</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> 
+                         removeWords<span class="p">,</span> 
+                         <span class="kt">c</span><span class="p">(</span><span class="s">&quot;amp&quot;</span><span class="p">,</span> <span class="s">&quot;RT&quot;</span><span class="p">))</span>
+  tweet.corpus <span class="o">&lt;-</span> tm_map<span class="p">(</span>tweet.corpus<span class="p">,</span> stripWhitespace<span class="p">)</span>
+  <span class="kr">return</span><span class="p">(</span>tweet.corpus<span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">#function to make a word cloud</span>
+wordcloud_year <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>my_year<span class="p">,</span> my_scale<span class="p">){</span>
+  tweet.corpus <span class="o">&lt;-</span> corpus_year<span class="p">(</span>my_year<span class="p">)</span>
+  <span class="c1">#set.seed to ensure the word cloud looks the same everytime</span>
+  <span class="kp">set.seed</span><span class="p">(</span><span class="m">10000</span><span class="p">)</span>
+  wordcloud<span class="p">(</span>tweet.corpus<span class="p">,</span> 
+            max.words <span class="o">=</span> <span class="m">150</span><span class="p">,</span> 
+            random.order <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> 
+            random.color <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> 
+            scale <span class="o">=</span> my_scale<span class="p">,</span>
+            colors <span class="o">=</span> viridis<span class="p">(</span>n <span class="o">=</span> <span class="m">100</span><span class="p">,</span> end <span class="o">=</span> <span class="m">0.92</span><span class="p">))</span>
+<span class="p">}</span>
+
+wordcloud_year<span class="p">(</span><span class="m">2014</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="m">0.5</span><span class="p">))</span> <span class="o">+</span> 
+  title<span class="p">(</span><span class="s">&quot;Most Frequent Words of 2014&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-9" src="/figure/russian_tweets_2-unnamed-chunk-9-1.png"></p>
+<div class="highlight"><pre><span></span>## integer(0)
+</pre></div>
+
+
+<p>It appears that the Russians kept a low profile in 2014, as their tweet content seems largely apolitical.</p>
+<div class="highlight"><pre><span></span>wordcloud_year<span class="p">(</span><span class="m">2015</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">2.5</span><span class="p">,</span> <span class="m">0.25</span><span class="p">))</span> <span class="o">+</span>
+  title<span class="p">(</span><span class="s">&quot;Most Frequent Words of 2015&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-10" src="/figure/russian_tweets_2-unnamed-chunk-10-1.png"></p>
+<div class="highlight"><pre><span></span>## integer(0)
+</pre></div>
+
+
+<p>In 2015 the trolls began to talk about divisive issues such as the presidential election, the Tea Party, ISIS, as well as the mass shooting in San Bernadino, California.</p>
+<div class="highlight"><pre><span></span>wordcloud_year<span class="p">(</span><span class="m">2016</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="m">0.5</span><span class="p">))</span> <span class="o">+</span>
+  title<span class="p">(</span><span class="s">&quot;Most Frequent Words of 2016&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-11" src="/figure/russian_tweets_2-unnamed-chunk-11-1.png"></p>
+<div class="highlight"><pre><span></span>## integer(0)
+</pre></div>
+
+
+<p>During the election year the Twitter trolls talked the most about Hillary Clinton and Donald Trump, with "Trump" appearing over twice as often as "Clinton".  They also continued tweeting about other divisive topics like the Black Lives Matters movement and the refugee crisis.</p>
+<div class="highlight"><pre><span></span>tweet.corpus.2016 <span class="o">&lt;-</span> corpus_year<span class="p">(</span><span class="m">2016</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, PlainTextDocument):
+## transformation drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, tolower): transformation drops
+## documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, removeNumbers): transformation
+## drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, removePunctuation):
+## transformation drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, removeWords,
+## stopwords(&quot;English&quot;)): transformation drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, removeWords, c(&quot;amp&quot;, &quot;RT&quot;)):
+## transformation drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Warning in tm_map.SimpleCorpus(tweet.corpus, stripWhitespace):
+## transformation drops documents
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>tdm <span class="o">&lt;-</span> TermDocumentMatrix<span class="p">(</span>tweet.corpus.2016<span class="p">,</span> 
+                          control <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>wordLengths <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="kc">Inf</span><span class="p">)))</span>
+<span class="c1">#the corpus was too big to turn into a matrix so we need to remove sparse terms</span>
+tdm2 <span class="o">&lt;-</span> removeSparseTerms<span class="p">(</span>tdm<span class="p">,</span> <span class="m">0.9997</span><span class="p">)</span>
+mat <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>tdm2<span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error: cannot allocate vector of size 1.8 Gb
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>freq.mat <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>term <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>mat<span class="p">),</span> 
+                      freq <span class="o">=</span> <span class="kp">rowSums</span><span class="p">(</span>mat<span class="p">),</span> 
+                      row.names <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in rownames(mat): object &#39;mat&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>freq.mat2 <span class="o">&lt;-</span> freq.mat <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>term <span class="o">==</span> <span class="s">&#39;trump&#39;</span> <span class="o">|</span> 
+           term <span class="o">==</span> <span class="s">&#39;clinton&#39;</span> <span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;sanders&#39;</span> <span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;stein&#39;</span> <span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;johnson&#39;</span><span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;rubio&#39;</span> <span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;carson&#39;</span> <span class="o">|</span>
+           term <span class="o">==</span> <span class="s">&#39;cruz&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>desc<span class="p">(</span>freq<span class="p">))</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(lhs, parent, parent): object &#39;freq.mat&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1"># Barplot of candidate names.</span>
+freq.mat2 <span class="o">%&gt;%</span>
+    mutate<span class="p">(</span>term <span class="o">=</span> fct_reorder<span class="p">(</span>term<span class="p">,</span> freq<span class="p">,</span> <span class="m">.</span>desc <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span> <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> term<span class="p">,</span> y <span class="o">=</span> freq<span class="p">))</span> <span class="o">+</span> 
+  geom_bar<span class="p">(</span>stat <span class="o">=</span> <span class="s">&#39;identity&#39;</span><span class="p">,</span> fill <span class="o">=</span> <span class="s">&quot;#1F83B4&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.grid.major.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        panel.grid.minor <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.title.y <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&quot;Frequency of Candidate Names in 2016&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_x_discrete<span class="p">(</span>labels <span class="o">=</span>  <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Trump&#39;</span><span class="p">,</span> <span class="s">&#39;Clinton&#39;</span><span class="p">,</span> <span class="s">&#39;Cruz&#39;</span><span class="p">,</span> <span class="s">&#39;Sanders&#39;</span><span class="p">,</span> <span class="s">&#39;Carson&#39;</span><span class="p">,</span>
+                               <span class="s">&#39;Rubio&#39;</span><span class="p">,</span> <span class="s">&#39;Johnson&#39;</span><span class="p">,</span> <span class="s">&#39;Stein&#39;</span><span class="p">))</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#39;Candidate&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>## Error in eval(lhs, parent, parent): object &#39;freq.mat2&#39; not found
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>wordcloud_year<span class="p">(</span><span class="m">2017</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">3.5</span><span class="p">,</span> <span class="m">0.25</span><span class="p">))</span> <span class="o">+</span>
+  title<span class="p">(</span><span class="s">&quot;Most Frequent Words of 2017&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-13" src="/figure/russian_tweets_2-unnamed-chunk-13-1.png"></p>
+<div class="highlight"><pre><span></span>## integer(0)
+</pre></div>
+
+
+<h2>The Trolls</h2>
+<div class="highlight"><pre><span></span><span class="c1"># Count the number of total tweets, replies, and RTs for each user.</span>
+users_tweets <span class="o">&lt;-</span> select<span class="p">(</span>tweets<span class="p">,</span> <span class="kt">c</span><span class="p">(</span>user_key<span class="p">,</span> text<span class="p">))</span>
+
+cookies <span class="o">&lt;-</span> users_tweets <span class="o">%&gt;%</span>
+    group_by<span class="p">(</span>user_key<span class="p">)</span> <span class="o">%&gt;%</span>
+    summarise<span class="p">(</span>total<span class="o">=</span><span class="kp">length</span><span class="p">(</span>text<span class="p">),</span> 
+            <span class="c1">#hashtags=sum(str_count(text,&quot;#(\\d|\\w)+&quot;)),</span>
+            replies<span class="o">=</span><span class="kp">sum</span><span class="p">(</span>str_count<span class="p">(</span>text<span class="p">,</span><span class="s">&quot;^(@)&quot;</span><span class="p">)),</span>
+            rt<span class="o">=</span><span class="kp">sum</span><span class="p">(</span>str_count<span class="p">(</span>text<span class="p">,</span><span class="s">&quot;^(RT)&quot;</span><span class="p">))</span>
+            <span class="c1">#urls=sum(str_count(text,&quot;^(([^:]+)://)?([^:/]+)(:([0-9]+))?(/.*)&quot;))</span>
+    <span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>desc<span class="p">(</span>total<span class="p">))</span>
+
+cookies<span class="o">$</span>original_content <span class="o">&lt;-</span> cookies<span class="o">$</span>total <span class="o">-</span> cookies<span class="o">$</span>rt <span class="o">-</span> cookies<span class="o">$</span>replies
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>cakes <span class="o">&lt;-</span> users_tweets <span class="o">%&gt;%</span>
+    summarise<span class="p">(</span>total<span class="o">=</span><span class="kp">length</span><span class="p">(</span>text<span class="p">),</span>
+          replies<span class="o">=</span><span class="kp">sum</span><span class="p">(</span>str_count<span class="p">(</span>text<span class="p">,</span><span class="s">&quot;^(@)&quot;</span><span class="p">)),</span>
+            rt<span class="o">=</span><span class="kp">sum</span><span class="p">(</span>str_count<span class="p">(</span>text<span class="p">,</span><span class="s">&quot;^(RT)&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+cakes<span class="o">$</span>other <span class="o">&lt;-</span> cakes<span class="o">$</span>total <span class="o">-</span> cakes<span class="o">$</span>rt <span class="o">-</span> cakes<span class="o">$</span>replies
+cakes <span class="o">&lt;-</span> select<span class="p">(</span>cakes<span class="p">,</span> <span class="o">-</span>total<span class="p">)</span> <span class="o">%&gt;%</span>
+  melt<span class="p">()</span>
+
+<span class="c1"># Make the waffle chart</span>
+cupcakes <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Replies (1.5%)&#39;</span> <span class="o">=</span> cakes<span class="p">[,</span><span class="m">2</span><span class="p">][</span><span class="m">1</span><span class="p">],</span> <span class="s">&#39;Retweets (72.5%)&#39;</span> <span class="o">=</span> cakes<span class="p">[,</span><span class="m">2</span><span class="p">][</span><span class="m">2</span><span class="p">],</span>
+              <span class="s">&#39;Original Content (30.0%)&#39;</span> <span class="o">=</span> cakes<span class="p">[,</span><span class="m">2</span><span class="p">][</span><span class="m">3</span><span class="p">])</span>
+waffle<span class="p">(</span>cupcakes<span class="o">/</span><span class="m">1000</span><span class="p">,</span> colors <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;#F02720&quot;</span><span class="p">,</span> <span class="s">&quot;#1F83B4&quot;</span><span class="p">,</span> <span class="s">&quot;#FF810E&quot;</span><span class="p">),</span> 
+       title <span class="o">=</span> <span class="s">&#39;Types of Troll Twitter Content&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-15" src="/figure/russian_tweets_2-unnamed-chunk-15-1.png"></p>
+<p>The trolls focused most of their efforts on retweeting content made by other Russian troll accounts as well as retweeting and replying to popular Twitter users to gain more followers.</p>
+<div class="highlight"><pre><span></span>dough <span class="o">&lt;-</span> cookies <span class="o">%&gt;%</span>
+  top_n<span class="p">(</span><span class="m">15</span><span class="p">,</span> total<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&#39;user_key&#39;</span><span class="p">,</span> <span class="s">&#39;replies&#39;</span><span class="p">,</span> <span class="s">&#39;rt&#39;</span><span class="p">,</span> <span class="s">&#39;original_content&#39;</span><span class="p">))</span><span class="o">%&gt;%</span>
+  melt<span class="p">(</span><span class="s">&#39;user_key&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>variable<span class="p">)</span>
+
+ggplot<span class="p">(</span>data <span class="o">=</span> dough<span class="p">[</span><span class="kp">order</span><span class="p">(</span>dough<span class="o">$</span>variable<span class="p">,</span> decreasing <span class="o">=</span> <span class="bp">T</span><span class="p">),],</span> 
+       aes<span class="p">(</span>x <span class="o">=</span> reorder<span class="p">(</span>user_key<span class="p">,</span> value<span class="p">),</span> 
+                         y <span class="o">=</span> value<span class="p">,</span> 
+           fill <span class="o">=</span> <span class="kp">factor</span><span class="p">(</span>variable<span class="p">,</span> levels<span class="o">=</span>
+                           <span class="kt">c</span><span class="p">(</span><span class="s">&quot;replies&quot;</span><span class="p">,</span> <span class="s">&quot;original_content&quot;</span><span class="p">,</span> <span class="s">&quot;rt&quot;</span><span class="p">))))</span> <span class="o">+</span> 
+  geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">&quot;identity&quot;</span><span class="p">)</span> <span class="o">+</span> coord_flip<span class="p">()</span> <span class="o">+</span> 
+  scale_fill_manual<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;#F02720&quot;</span><span class="p">,</span> <span class="s">&quot;#FF810E&quot;</span><span class="p">,</span> <span class="s">&quot;#1F83B4&quot;</span><span class="p">),</span>
+                    name <span class="o">=</span> <span class="s">&#39;Types of Troll\nTwitter Content&#39;</span><span class="p">,</span>
+                    breaks <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;replies&#39;</span><span class="p">,</span> <span class="s">&#39;original_content&#39;</span><span class="p">,</span> <span class="s">&#39;rt&#39;</span><span class="p">),</span>
+                    labels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;Replies&#39;</span><span class="p">,</span> <span class="s">&#39;Original Content&#39;</span><span class="p">,</span> <span class="s">&#39;Retweets&#39;</span><span class="p">))</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.grid.major.y <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span> 
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#39;Twitter Handle&#39;</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>axis.title.x <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&#39;Types of Twitter Content by User&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-16" src="/figure/russian_tweets_2-unnamed-chunk-16-1.png"></p>
+<p>Here are the top fifteen accounts with the most tweets.  Most of the accounts were focused on retweeting content instead of creating original tweets.  That said, a small number of accounts were focused on doing the exact opposite, such as the account "TEN_GOP", which was posing as an account run by the Tennessee Republican Party.</p>
+<div class="highlight"><pre><span></span>ggplot<span class="p">(</span>data <span class="o">=</span> users<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> followers_count<span class="p">,</span> y <span class="o">=</span> statuses_count<span class="p">))</span> <span class="o">+</span> 
+  geom_jitter<span class="p">(</span>color <span class="o">=</span> <span class="s">&#39;#1696AC&#39;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1.5</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  geom_text_repel<span class="p">(</span>label <span class="o">=</span> 
+    <span class="kp">ifelse</span><span class="p">(</span>users<span class="o">$</span>followers_count<span class="o">&gt;</span><span class="m">30000</span> <span class="o">|</span> users<span class="o">$</span>statuses_count<span class="o">&gt;</span><span class="m">35000</span><span class="p">,</span>
+    <span class="kp">as.character</span><span class="p">(</span>users<span class="o">$</span>screen_name<span class="p">),</span>
+    <span class="s">&#39;&#39;</span><span class="p">),</span> 
+    size <span class="o">=</span> <span class="m">2.5</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#39;Followers&#39;</span><span class="p">,</span> y <span class="o">=</span> <span class="s">&#39;Tweets&#39;</span><span class="p">)</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&#39;Users Tweets and Followers&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><img alt="plot of chunk unnamed-chunk-17" src="/figure/russian_tweets_2-unnamed-chunk-17-1.png"></p>
+<p>Most accounts had a relatively low amount of followers, which is pretty normal; one data scientist found that for Twitter users with less than 100,000 followers, the average number of followers was 453.  Some of the accounts with the highest amount of tweets and followers were accounts posing as news organizations.  </p>
+<p>One of the most well known accounts belonged to the fictional blogger Jenna Abrams, who was famous for her opinionated tweets and highly controversial opinions.</p>
+<h1>Conclusion</h1>
+<p>This dataset was interesting to work with and definitely has potential to be investigated further and applied to machine learning.  Perhaps this data could be used to identify suspicious social media accounts and potential bots to prevent foreign entities from interfering in future U.S. elections.</p>
+<h1>References</h1>
+<p>https://www.kaggle.com/vikasg/russian-troll-tweets
+https://www.nbcnews.com/tech/social-media/now-available-more-200-000-deleted-russian-troll-tweets-n844731
+http://tidyr.tidyverse.org/reference/separate.html
+https://stackoverflow.com/questions/37129178/converting-character-to-time-in-r
+https://stackoverflow.com/questions/43501670/complete-column-with-group-by-and-complete
+https://rud.is/b/2016/02/14/making-faceted-heatmaps-with-ggplot2/
+https://rpubs.com/haj3/calheatmap
+http://www.latimes.com/world/europe/la-fg-russia-election-meddling-20170330-story.html
+https://stackoverflow.com/questions/18153504/removing-non-english-text-from-corpus-in-r-using-T
+http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+https://www.datasciencecentral.com/profiles/blogs/find-out-what-celebrities-tweet-about-the-most-1
+https://stackoverflow.com/questions/21589254/remove-urls-from-strings
+https://stackoverflow.com/questions/24224298/filter-rows-documents-from-document-term-matrix-in-r
+https://stackoverflow.com/questions/5208679/order-bars-in-ggplot2-bar-graph
+http://www.salemmarafi.com/code/counting-tweets-in-r/
+https://stackoverflow.com/questions/15624656/label-points-in-geom-point
+https://kickfactory.com/blog/average-twitter-followers-updated-2016/
+https://www.thedailybeast.com/jenna-abrams-russias-clown-troll-princess-duped-the-mainstream-media-and-the-world</p>
+		    <div class="tags">
+		        <p>tags: <a href="/tag/r.html">R</a><a href="/tag/data-cleaning.html">Data Cleaning</a><a href="/tag/data-analysis.html">Data Analysis</a></p>
+		    </div>
+
+<div class="sharing">
+</div>
+<hr>
+
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		<!-- Categories -->
+		<div class="widget no-mg-top">
+			<h3 class="headline">Categories</h3><span class="line"></span><div class="clearfix"></div>
+			<nav class="categories">
+				<ul>
+					    <li><a href="/category/data-analyst-nanodegree.html">Data Analyst Nanodegree</a></li>
+					    <li class="active"><a href="/category/side-project.html">Side Project</a></li>
+					    <li><a href="/category/side-projects.html">Side Projects</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">&copy;  || Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="https://www.linkedin.com/in/quentin-ikeno/" class="tooltip top" title="linkedin">
+										<i class="icon-linkedin"></i>
+									</a>
+								</li>
+								<li>
+									<a href="https://github.com/quentinikeno" class="tooltip top" title="github">
+										<i class="icon-github"></i>
+									</a>
+								</li>
+							<li><a href="/None" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+
+	<!-- Javascripts -->
+	<script src="/theme/js/jquery.min.js"></script>
+	</body>
+</html>
