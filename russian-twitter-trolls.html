@@ -474,12 +474,12 @@ wordcloud_year<span class="p">(</span><span class="m">2014</span><span class="p"
 tdm <span class="o">&lt;-</span> TermDocumentMatrix<span class="p">(</span>tweet.corpus.2016<span class="p">,</span> 
                           control <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>wordLengths <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="kc">Inf</span><span class="p">)))</span>
 <span class="c1">#the corpus was too big to turn into a matrix so we need to remove sparse terms</span>
-<span class="c1">#tdm2 &lt;- removeSparseTerms(tdm, 0.9997)</span>
-mat <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>tdm<span class="p">)</span>
+tdm2 <span class="o">&lt;-</span> removeSparseTerms<span class="p">(</span>tdm<span class="p">,</span> <span class="m">0.9997</span><span class="p">)</span>
+mat <span class="o">&lt;-</span> <span class="kp">as.matrix</span><span class="p">(</span>tdm2<span class="p">)</span>
 </pre></div>
 
 
-<div class="highlight"><pre><span></span>## Error: cannot allocate vector of size 44.1 Gb
+<div class="highlight"><pre><span></span>## Error: cannot allocate vector of size 1.8 Gb
 </pre></div>
 
 
